@@ -1,2 +1,2 @@
 # rabbithole
-# Contributors: Praval, Adrian, Jacob, Connor
+# Contributors: Praval, Adrian, Jacob, Connor, Jaden
