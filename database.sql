@@ -24,6 +24,7 @@ CREATE TABLE community (
 );
 
 CREATE TABLE user_community (
+    uc_id SERIAL NOT NULL,
     user_id SERIAL NOT NULL ,
     community_id SERIAL NOT NULL,
     CONSTRAINT fk_user_id
@@ -32,7 +33,7 @@ CREATE TABLE user_community (
     CONSTRAINT fk_community_id
         FOREIGN KEY (community_id)
             REFERENCES community(community_id) ON DELETE CASCADE,
-    PRIMARY KEY (user_id, community_id)
+    PRIMARY KEY (uc_id)
 );
 
 CREATE TABLE post (
@@ -41,10 +42,9 @@ CREATE TABLE post (
     post_title VARCHAR(255) NOT NULL,
     post_image VARCHAR(255) NULL,
     post_content VARCHAR(255) NOT NULL,
-    user_id SERIAL NOT NULL,
-    community_id SERIAL NOT NULL,
-    CONSTRAINT fk_user_id
-        FOREIGN KEY (user_id, community_id)
-            REFERENCES user_community(user_id, community_id) ON DELETE CASCADE,
-    PRIMARY KEY (post_id, user_id, community_id)
+    uc_id SERIAL NOT NULL,
+    CONSTRAINT fk_uc_id
+        FOREIGN KEY (uc_id)
+            REFERENCES user_community(uc_id) ON DELETE CASCADE,
+    PRIMARY KEY (post_id)
 );

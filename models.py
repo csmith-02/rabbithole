@@ -4,8 +4,9 @@ db = SQLAlchemy()
 
 user_community = db.Table(
   'user_community',
-  db.Column('user_id', db.Integer, db.ForeignKey('users.user_id'), primary_key=True),
-  db.Column('community_id', db.Integer, db.ForeignKey('community.community_id'), primary_key=True),
+  db.Column('uc_id', db.Integer, primary_key=True),
+  db.Column('user_id', db.Integer, db.ForeignKey('users.user_id')),
+  db.Column('community_id', db.Integer, db.ForeignKey('community.community_id')),
 )
 
 class User(db.Model):
@@ -39,8 +40,7 @@ class Post(db.Model):
     post_title = db.Column(db.String, nullable=False)
     post_image = db.Column(db.String, nullable=True)
     post_content = db.Column(db.Text, nullable=False)
-    community_id = db.Column(db.Integer, db.ForeignKey('user_community.community_id'), primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user_community.user_id'), primary_key=True)
+    uc_id = db.Column(db.Integer, db.ForeignKey('user_community.uc_id'))
 
     def __repr__(self) -> str:
         return f'<Post {self.post_id}, {self.post_title}, {self.community_id}, {self.user_id}>'
