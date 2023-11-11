@@ -1,50 +1,62 @@
 CREATE DATABASE rabbithole;
 
-CREATE TABLE users (
-    user_id SERIAL NOT NULL,
-    user_name VARCHAR(255) NOT NULL,
-    user_email VARCHAR(255) NOT NULL,
-    user_pfpic VARCHAR(255),
-    user_bio TEXT NULL,
-    user_hashpw VARCHAR(255) NOT NULL,
-    PRIMARY KEY (user_id),
-    UNIQUE (user_name, user_email)
+CREATE TABLE IF NOT EXISTS users (
+    id SERIAL NOT NULL,
+    username VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    pfpic VARCHAR(255),
+    bio TEXT NULL,
+    hashpw VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id),
+    UNIQUE (username, email)
 );
 
-CREATE TABLE community (
-    community_id SERIAL NOT NULL,
-    community_name VARCHAR(255),
+CREATE TABLE IF NOT EXISTS community (
+    id SERIAL NOT NULL,
+    name VARCHAR(255),
     pfpic VARCHAR(255),
     owner_id SERIAL NOT NULL,
-    PRIMARY KEY (community_id),
+    PRIMARY KEY (id),
     CONSTRAINT fk_owner_id
         FOREIGN KEY (owner_id)
-            REFERENCES users(user_id),
-    UNIQUE (community_name)
+            REFERENCES users(id),
+    UNIQUE (name)
 );
 
-CREATE TABLE user_community (
+CREATE TABLE IF NOT EXISTS user_community (
     uc_id SERIAL NOT NULL,
     user_id SERIAL NOT NULL ,
     community_id SERIAL NOT NULL,
     CONSTRAINT fk_user_id
         FOREIGN KEY (user_id)
-            REFERENCES users(user_id),
+            REFERENCES users(id),
     CONSTRAINT fk_community_id
         FOREIGN KEY (community_id)
-            REFERENCES community(community_id) ON DELETE CASCADE,
-    PRIMARY KEY (uc_id)
+            REFERENCES community(id) ON DELETE CASCADE,
+    PRIMARY KEY (uc_id),
+    UNIQUE(user_id, community_id)
 );
 
-CREATE TABLE post (
-    post_id SERIAL NOT NULL,
-    post_time_created DATE NOT NULL,
-    post_title VARCHAR(255) NOT NULL,
-    post_image VARCHAR(255) NULL,
-    post_content VARCHAR(255) NOT NULL,
+CREATE TABLE IF NOT EXISTS post (
+    id SERIAL NOT NULL,
+    time_created DATE NOT NULL,
+    title VARCHAR(255) NULL,
+    image VARCHAR(255) NULL,
+    content TEXT NOT NULL,
     uc_id SERIAL NOT NULL,
     CONSTRAINT fk_uc_id
         FOREIGN KEY (uc_id)
             REFERENCES user_community(uc_id) ON DELETE CASCADE,
-    PRIMARY KEY (post_id)
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS reply (
+    id SERIAL NOT NULL,
+    time_created DATE NOT NULL,
+    content TEXT NOT NULL,
+    parent_id SERIAL NOT NULL,
+    CONSTRAINT fk_parent_id
+        FOREIGN KEY (parent_id)
+            REFERENCES reply(id) ON DELETE CASCADE,
+    PRIMARY KEY (id)
 );
