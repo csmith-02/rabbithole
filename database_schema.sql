@@ -55,9 +55,13 @@ CREATE TABLE IF NOT EXISTS reply (
     id SERIAL NOT NULL,
     time_created DATE NOT NULL,
     content TEXT NOT NULL,
+    post_id SERIAL NOT NULL,
     parent_id SERIAL NOT NULL,
     CONSTRAINT fk_parent_id
         FOREIGN KEY (parent_id)
             REFERENCES reply(id) ON DELETE CASCADE,
+    CONSTRAINT fk_post_id
+        FOREIGN KEY (post_id)
+            REFERENCES post(id) ON DELETE CASCADE,
     PRIMARY KEY (id)
 );
