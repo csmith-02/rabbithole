@@ -13,8 +13,9 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS community (
     id SERIAL NOT NULL,
-    name VARCHAR(255),
-    pfpic VARCHAR(255),
+    name VARCHAR(255) NOT NULL,
+    subject VARCHAR(255) NOT NULL,
+    pfpic VARCHAR(255) NULL,
     owner_id SERIAL NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT fk_owner_id
@@ -54,9 +55,13 @@ CREATE TABLE IF NOT EXISTS reply (
     id SERIAL NOT NULL,
     time_created DATE NOT NULL,
     content TEXT NOT NULL,
+    post_id SERIAL NOT NULL,
     parent_id SERIAL NOT NULL,
     CONSTRAINT fk_parent_id
         FOREIGN KEY (parent_id)
             REFERENCES reply(id) ON DELETE CASCADE,
+    CONSTRAINT fk_post_id
+        FOREIGN KEY (post_id)
+            REFERENCES post(id) ON DELETE CASCADE,
     PRIMARY KEY (id)
 );
