@@ -22,18 +22,18 @@ def send_static(path):
 def index():
     return render_template('landing_page.html')
 
-@app.route('/home_page.html')
+@app.route('/home')
 def home():
     return render_template('home_page.html')
 
-@app.route('/community_page.html')
+@app.route('/communities')
 def community():
     return render_template('community_page.html')
 
-@app.route('/login_page.html')
+@app.route('/login')
 def login():
     return render_template('login_page.html')
 
-@app.route('/signup_page.html')
+@app.route('/signup')
 def signup():
     return render_template('signup_page.html')
