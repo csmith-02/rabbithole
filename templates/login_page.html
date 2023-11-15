@@ -1,7 +1,61 @@
-{% extends "_template.html" }
+{% extends "_template.html" %} {% block title %}Login{% endblock %} {% block
+body %}
+<style>
+  .login-container {
+    text-align: center;
+    margin-top: 100px;
+  }
 
-{% block title %}{% endblock }
+  .login-form {
+    width: 300px;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
 
-{% block body %}
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+  }
 
+  .input-field {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 12px;
+    box-sizing: border-box;
+  }
+
+  .submit-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .submit-btn:hover {
+    background-color: #45a049;
+  }
+</style>
+<div style="text-align: center; margin-top: 100px">
+  <form method="post" action="{{ url_for('login') }}">
+    <label for="username_email">Username/Email:</label>
+    <input
+      type="text"
+      id="username_email"
+      name="username_email"
+      required
+    /><br /><br />
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required /><br /><br />
+
+    <input type="submit" value="Login" />
+  </form>
+</div>
 {% endblock %}
