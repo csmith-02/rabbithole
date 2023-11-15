@@ -21,3 +21,19 @@ def send_static(path):
 @app.get('/')
 def index():
     return render_template('landing_page.html')
+
+@app.route('/home_page.html')
+def home():
+    return render_template('home_page.html')
+
+@app.route('/community_page.html')
+def community():
+    return render_template('community_page.html')
+
+@app.route('/login_page.html')
+def login():
+    return render_template('login_page.html')
+
+@app.route('/signup_page.html')
+def signup():
+    return render_template('signup_page.html')
