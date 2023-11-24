@@ -3,6 +3,7 @@
 {% block title %}{% endblock %}
 
 {% block body %}
+<h1>Welcome {{ username }}</h1>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,7 +26,10 @@
             </div>
         </div>
       </div>
-      <p style="font-size: 25px;">Posts</p>  
+      <p style="font-size: 25px;">Posts</p>
+      <form action="/logout" method="post">
+        <button type="submit" class="btn btn-success btn-rounded ml-2 m-3">Logout</button>
+      </form>
 </body>
 </html>
 {% endblock %}
