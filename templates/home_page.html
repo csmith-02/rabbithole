@@ -1,18 +1,10 @@
 {% extends "_template.html" %}
 
-{% block title %}{% endblock %}
+{% block title %}RabbitHole | Home{% endblock %}
 
 {% block body %}
-<h1>Welcome {{ username }}</h1>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <title>Document</title>
-</head>
-<body>
+<h1 class="text-center">Welcome {{ username }},</h1>
+<div class="container">
     <div class="input-group mb-3">
         <button class="btn btn-outline-secondary ml-2" href="profile_page.html"> <img src = "/rabbithole/static/image 3.png"></button>
         <input type="text" class="form-control m-1" placeholder="Create a post" aria-label="Create a post" aria-describedby="button-addon2">
@@ -25,11 +17,10 @@
                 <button type="submit" class="btn btn-success btn-rounded ml-2 m-3">Submit</button>            
             </div>
         </div>
-      </div>
-      <p style="font-size: 25px;">Posts</p>
-      <form action="/logout" method="post">
+    </div>
+    <p style="font-size: 25px;">Posts</p>
+    <form action="/logout" method="post">
         <button type="submit" class="btn btn-success btn-rounded ml-2 m-3">Logout</button>
-      </form>
-</body>
-</html>
+    </form>
+</div>
 {% endblock %}

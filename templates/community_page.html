@@ -1,7 +1,34 @@
 {% extends "_template.html" %}
 
-{% block title %}{% endblock %}
+{% block title %}RabbitHole | Community{% endblock %}
 
 {% block body %}
-
+    <style>
+        .profile {
+            height: 55px;
+            width: auto;
+        }
+    </style>
+    {% if loggedIn %}
+        <h1 class="text-center">Your Communities</h1>
+    {% else %}
+        <h1 class="text-center">Browse our Communities</h1>
+        <p class="text-center">You must be logged in to interact with a community.</p>
+        <div class="container border border-3 p-5">
+            {% for community in communities %}
+            <div class="d-flex flex-wrap justify-content-start">
+                {% if community.pfpic == None %}
+                    <img class="profile float-left mr-3" src="rabbithole/static/image 3.png"/>
+                {% else %}
+                    <img class="profile float-left mr-3 rounded-circle border border-3" src="rabbithole/static/{{ community.pfpic }}">
+                {% endif%}
+                <h2 class="mr-5">{{ community.name }}</h2>
+                <h2 class="mr-5 mb-5">/communities/{{ community.name }}</h2>
+                <div>
+                    <button class="btn btn-primary">JOIN</button>
+                </div>
+            </div>
+            {% endfor %}
+            </div>
+    {% endif %}
 {% endblock %}

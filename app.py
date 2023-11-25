@@ -29,12 +29,20 @@ def index():
 @app.route('/home')
 def home():
     if 'username' not in session:
-        abort(401)
-    return render_template('home_page.html', username=session['username'])
+        # Redirect the user to login to access the home route
+        return redirect('/login', 302)
+    return render_template('home_page.html', username=session['username'], loggedIn=True)
 
 @app.route('/communities')
 def community():
-    return render_template('community_page.html')
+    if 'username' in session:
+        loggedIn=True
+        communities = User.query.filter_by(username=session['username']).all()
+    else:
+        communities = Community.query.all()
+        loggedIn=False
+    
+    return render_template('community_page.html', loggedIn=loggedIn, communities=communities)
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
@@ -46,21 +54,25 @@ def login():
             return redirect('/home')
         else:
             return render_template('login_page.html', error="Invalid username or password")
-        
-    return render_template('login_page.html')
+    if 'username' in session:
+        return redirect('/home', 302)
+    return render_template('login_page.html', loggedIn=False)
 
 @app.route('/signup', methods=['POST', 'GET'])
 def signup():
+
     if request.method == 'POST':
         username = request.form.get('username')
+        email = request.form.get('email')
         raw_password = request.form.get('password')
         
-        if perform_signup(username, raw_password):
-            return redirect('/home')
+        if perform_signup(username, email, raw_password):
+            print("User was created!")
         else:
             return render_template('signup_page.html', error="Username already taken")
-    
-    return render_template('signup_page.html')
+    if 'username' in session:
+        return redirect('/home', 302)
+    return render_template('signup_page.html', loggedIn=False)
 
 @app.post('/logout')
 def logout():
@@ -73,13 +85,13 @@ def perform_login(username, raw_password):
     
     existing_user = User.query.filter_by(username=username).first()
     
-    if not existing_user or not bcrypt.check_password_hash(existing_user.password, raw_password):
+    if not existing_user or not bcrypt.check_password_hash(existing_user.hashpw, raw_password):
         return False
     
     session['username'] = username
     return True
 
-def perform_signup(username, raw_password):
+def perform_signup(username, email, raw_password):
     if not username or not raw_password:
         abort(400)
     
@@ -89,7 +101,7 @@ def perform_signup(username, raw_password):
         return False  
     
     hashpw = bcrypt.generate_password_hash(raw_password, 12).decode()
-    new_user = User(username, hashpw)
+    new_user = User(username=username, email=email, hashpw=hashpw)
     db.session.add(new_user)
     db.session.commit()
     

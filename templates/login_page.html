@@ -1,6 +1,6 @@
 {% extends "_template.html" %} 
 
-{% block title %}Login{% endblock %} 
+{% block title %}RabbitHole | Login{% endblock %} 
 {% block body %}
 <style>
   .login-container {
@@ -45,19 +45,20 @@
   }
 </style>
 <div style="text-align: center; margin-top: 100px">
+  <h1>Welcome back!</h1>
   <form method="post" action="/login">
-    <label for="username_email">Username/Email:</label>
+    <label for="username_email">Username:</label>
     <input
       type="text"
-      id="username_email"
-      name="username_email"
+      id="username"
+      name="username"
       required
     /><br /><br />
 
     <label for="password">Password:</label>
     <input type="password" id="password" name="password" required /><br /><br />
 
-    <input type="submit" value="Login" />
+    <input type="submit" value="Login" class="btn btn-primary" />
   </form>
 </div>
 {% endblock %}
