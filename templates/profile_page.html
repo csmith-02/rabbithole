@@ -1,10 +1,10 @@
-{% extends "_template.html" %} {% block title %}Profile-Page{% endblock %} {%
-block body %}
+{% extends "_template.html" %} 
+
+{% block title %}RabbitHole | Profile{% endblock %} 
+{% block body %}
 <style>
   body {
     font-family: "Arial", sans-serif;
-    margin: 20px;
-    background-color: #f8f8f8;
   }
 
   h1,
@@ -15,7 +15,6 @@ block body %}
   img {
     max-width: 200px;
     border-radius: 50%;
-    margin-bottom: 20px;
   }
 
   p {
@@ -52,32 +51,23 @@ block body %}
     background-color: #45a049;
   }
 </style>
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{ user.username }}'s Profile</title>
-  </head>
-  <body>
-    <h1>{{ user.username }}'s Profile</h1>
+<div class="container">
+  <h1>{{ user.username }}'s Profile</h1>
 
-    <img
-      src="{{ url_for('static', filename='default_profile_picture.jpg') }}"
-      alt="Default Profile Picture"
-    />
+  <img
+    src="{{ url_for('static', filename='default_profile_picture.jpg') }}"
+    alt="Default Profile Picture"
+  />
 
-    <h2>Bio</h2>
-    <p>{{ user.bio }}</p>
+  <h2>Bio</h2>
+  <p>{{ user.bio }}</p>
 
-    <h2>Edit Bio</h2>
-    <form method="POST">
-      <label for="bio">Add to your bio:</label>
-      <textarea id="bio" name="bio" rows="4" cols="50">{{ user.bio }}</textarea>
-      <br />
-      <input type="submit" value="Update Bio" />
-    </form>
-  </body>
-</html>
-
+  <h2>Edit Bio</h2>
+  <form method="POST">
+    <label for="bio">Add to your bio:</label>
+    <textarea id="bio" name="bio" rows="4" cols="50">{{ user.bio }}</textarea>
+    <br />
+    <input type="submit" value="Update Bio" />
+  </form>
+</div>
 {% endblock %}
