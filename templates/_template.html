@@ -7,104 +7,115 @@
     <link rel="icon" type="image/x-icon" href="rabbithole/static/RabbitHoleLogo.ico"/>
     <title>{% block title %}{% endblock %}</title>
     <style>
-        body {
-            background-color: #FFFFFF; 
-            font-family: Arial, sans-serif;
-            color: #51b178; 
-        }
+      body {
+        background-color: #ffffff;
+        font-family: Arial, sans-serif;
+        color: #51b178;
+      }
 
-        .navbar {
-            background-color: #FFFFFF;      
-        }
+      .navbar {
+        background-color: #ffffff;
+      }
 
-        .navbar-brand,
-        .nav-link {
-            color: #51b178; 
-            font-size: 1.5em;
-            font-weight: bold;
-        }
+      .navbar-brand,
+      .nav-link {
+        color: #51b178;
+        font-size: 1.5em;
+        font-weight: bold;
+      }
 
-        .navbar-brand img {
-            height: 115px;
-            width: 115px;
-        }
+      .navbar-brand img {
+        height: 115px;
+        width: 115px;
+      }
 
-        .container {
-            max-width: 600px;
-            margin-top: 100px;
-        }
+      .container {
+        max-width: 600px;
+        margin-top: 100px;
+      }
 
-        h1 {
-            
-            margin-bottom: 30px;
-            font-weight: bold;
-            font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-            color: #51b178;
-        }
+      .lead {
+        font-size: 1.25em;
+        font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+          "Lucida Sans", Arial, sans-serif;
+        margin-bottom: 30px;
+        color: #ffffff;
+        background-color: #51b178;
+        padding: 10px;
+        display: inline-block;
+        border-radius: 20px;
+      }
 
-        .lead {
-            font-size: 1.25em;
-            font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-            margin-bottom: 30px;
-            color: #FFFFFF; 
-            background-color: #51b178; 
-            padding: 10px;
-            display: inline-block;
-            border-radius: 20px;
-        }
+      .btn-primary {
+        background-color: #90ee90;
+        border-color: #90ee90;
+        color: #000000;
+      }
 
-        .btn-primary {
-            background-color: #90EE90; 
-            border-color: #90EE90; 
-            color: #000000; 
-        }
-
-        .footer {
-            position: fixed;
-            left: 0;
-            bottom: 0;
-            width: 100%;
-            background-color: #F5F5DC;
-            color: #000000; 
-            text-align: center;
-            padding: 10px 0;
-        }
-        .space {
+      .footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        background-color: #f5f5dc;
+        color: #000000;
+        text-align: center;
+        padding: 10px 0;
+      }
+      .space {
         margin-right: 10px;
 
-            padding: 10px 0;        
-        }
-        .container.text-center {
-            margin-top: 0;
-        }
+        padding: 10px 0;
+      }
+      .container.text-center {
+        margin-top: 0;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <nav class="navbar navbar-expand-lg">
-        <a class="navbar-brand" href="/"><img src = "/rabbithole/static/RabbitHoleLogo.png"></a>
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="/home" style="padding-left: 50px; padding-right: 50px;">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/communities" style="padding-left: 50px; padding-right: 50px;">Community</a>
-                </li>
-            </ul>
-            <form class="form-inline my-2 my-lg-0" style="padding-right: 50px;">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" style="color: #51b178; border-color: #51b178;">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
-            {% if not loggedIn %} 
-                <a class="btn btn-outline-success my-2 my-sm-0" href="/login">Log in</a> 
-            {% endif %}
-        </div>
+      <a class="navbar-brand" href="/"
+        ><img src="/rabbithole/static/RabbitHoleLogo.png"
+      /></a>
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              href="/"
+              style="padding-left: 50px; padding-right: 50px"
+              >Home</a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              href="/communities"
+              style="padding-left: 50px; padding-right: 50px"
+              >Community</a
+            >
+          </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0" style="padding-right: 50px">
+          <input
+            class="form-control mr-sm-2"
+            type="search"
+            placeholder="Search"
+            aria-label="Search"
+            style="color: #51b178; border-color: #51b178"
+          />
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+            Search
+          </button>
+        </form>
+        {% if not loggedIn %} 
+                <a class="btn btn-outline-success my-2 my-sm-0" href="/login">Login</a> 
+        {% endif %}
+      </div>
     </nav>
-    
-    
 
     {% block body %}{% endblock %}
-    
+
     <footer class="footer">
         <div class="container text-center">
             <span class="text-muted">Copyright © 2023 RabbitHole, Inc.</span><br>
