@@ -45,17 +45,13 @@ def community():
 
     return render_template('community_page.html', loggedIn=loggedIn, communities=communities, user=user)
 
-@app.route('/profile')
-def community():
-    if 'username' in session:
-        loggedIn=True
-        user = User.query.filter_by(username=session['username']).first()
-    else:
-        loggedIn=False
-        user = None
-    communities = Community.query.all()
+@app.get('/profile')
+def profile():
+    if 'username' not in session:
+        return redirect('/login', 302)
 
-    return render_template('profile_page.html', loggedIn=loggedIn, communities=communities, user=user)
+    user = User.query.filter_by(username=session['username']).first()
+    return render_template('profile_page.html', user=user, loggedIn=True)
 
 
 @app.route('/login', methods=['POST', 'GET'])
@@ -134,7 +130,21 @@ def create_community():
         return redirect('/login', error="You must login before creating a community.")
     # Get form data for creating a community
     name = request.form.get('name')
-    subject = 'Miscellaneous'
+    subject_id = request.form.get('subject')
+    if int(subject_id) == 1:
+        subject = 'Business'
+    elif int(subject_id) == 2:
+        subject = 'School'
+    elif int(subject_id) == 3:
+        subject = 'Politics'
+    elif int(subject_id) == 4:
+        subject = 'Sports'
+    elif int(subject_id) == 5:
+        subject = 'Relationships'
+    elif int(subject_id) == 6:
+        subject = 'Miscellaneous'
+    else:
+        abort(400)
     if not name or not subject:
         abort(400)
     # Check if name is already taken

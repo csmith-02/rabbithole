@@ -22,6 +22,7 @@
         }
     </style>
     {% if loggedIn %}
+        {% if user.communities|length > 0 %}
         <h1 class="text-center">Your Communities</h1>
         <hr>
         <div class="container community border border-3 overflow-auto text-center">
@@ -50,6 +51,7 @@
             {% endfor %}
         </div>
         <hr>
+        {% endif %}
         <div class="w-25 d-flex flex-column m-auto inline">
             <a href="/communities/create"><button class="btn btn-primary w-100">Create a Community +</button></a>
         </div>
