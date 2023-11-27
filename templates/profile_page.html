@@ -1,0 +1,83 @@
+{% extends "_template.html" %} {% block title %}Profile-Page{% endblock %} {%
+block body %}
+<style>
+  body {
+    font-family: "Arial", sans-serif;
+    margin: 20px;
+    background-color: #f8f8f8;
+  }
+
+  h1,
+  h2 {
+    color: #333;
+  }
+
+  img {
+    max-width: 200px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+  }
+
+  p {
+    color: #555;
+    line-height: 1.5;
+  }
+
+  form {
+    margin-top: 20px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  textarea {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+  }
+
+  input[type="submit"] {
+    padding: 10px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  input[type="submit"]:hover {
+    background-color: #45a049;
+  }
+</style>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ user.username }}'s Profile</title>
+  </head>
+  <body>
+    <h1>{{ user.username }}'s Profile</h1>
+
+    <img
+      src="{{ url_for('static', filename='default_profile_picture.jpg') }}"
+      alt="Default Profile Picture"
+    />
+
+    <h2>Bio</h2>
+    <p>{{ user.bio }}</p>
+
+    <h2>Edit Bio</h2>
+    <form method="POST">
+      <label for="bio">Add to your bio:</label>
+      <textarea id="bio" name="bio" rows="4" cols="50">{{ user.bio }}</textarea>
+      <br />
+      <input type="submit" value="Update Bio" />
+    </form>
+  </body>
+</html>
+
+{% endblock %}
