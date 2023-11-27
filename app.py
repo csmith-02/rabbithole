@@ -45,6 +45,19 @@ def community():
 
     return render_template('community_page.html', loggedIn=loggedIn, communities=communities, user=user)
 
+@app.route('/profile')
+def community():
+    if 'username' in session:
+        loggedIn=True
+        user = User.query.filter_by(username=session['username']).first()
+    else:
+        loggedIn=False
+        user = None
+    communities = Community.query.all()
+
+    return render_template('profile_page.html', loggedIn=loggedIn, communities=communities, user=user)
+
+
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
