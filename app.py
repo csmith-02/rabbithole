@@ -29,12 +29,21 @@ def index():
 @app.route('/home')
 def home():
     if 'username' not in session:
-        abort(401)
-    return render_template('home_page.html', username=session['username'])
+        # Redirect the user to login to access the home route
+        return redirect('/login', 302)
+    return render_template('home_page.html', username=session['username'], loggedIn=True)
 
 @app.route('/communities')
 def community():
-    return render_template('community_page.html')
+    if 'username' in session:
+        loggedIn=True
+        user = User.query.filter_by(username=session['username']).first()
+    else:
+        loggedIn=False
+        user = None
+    communities = Community.query.all()
+
+    return render_template('community_page.html', loggedIn=loggedIn, communities=communities, user=user)
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
@@ -46,21 +55,25 @@ def login():
             return redirect('/home')
         else:
             return render_template('login_page.html', error="Invalid username or password")
-        
-    return render_template('login_page.html')
+    if 'username' in session:
+        return redirect('/home', 302)
+    return render_template('login_page.html', loggedIn=False)
 
 @app.route('/signup', methods=['POST', 'GET'])
 def signup():
+
     if request.method == 'POST':
         username = request.form.get('username')
+        email = request.form.get('email')
         raw_password = request.form.get('password')
         
-        if perform_signup(username, raw_password):
-            return redirect('/home')
+        if perform_signup(username, email, raw_password):
+            print("User was created!")
         else:
             return render_template('signup_page.html', error="Username already taken")
-    
-    return render_template('signup_page.html')
+    if 'username' in session:
+        return redirect('/home', 302)
+    return render_template('signup_page.html', loggedIn=False)
 
 @app.post('/logout')
 def logout():
@@ -73,13 +86,13 @@ def perform_login(username, raw_password):
     
     existing_user = User.query.filter_by(username=username).first()
     
-    if not existing_user or not bcrypt.check_password_hash(existing_user.password, raw_password):
+    if not existing_user or not bcrypt.check_password_hash(existing_user.hashpw, raw_password):
         return False
     
     session['username'] = username
     return True
 
-def perform_signup(username, raw_password):
+def perform_signup(username, email, raw_password):
     if not username or not raw_password:
         abort(400)
     
@@ -89,8 +102,82 @@ def perform_signup(username, raw_password):
         return False  
     
     hashpw = bcrypt.generate_password_hash(raw_password, 12).decode()
-    new_user = User(username, hashpw)
+    new_user = User(username=username, email=email, hashpw=hashpw)
     db.session.add(new_user)
     db.session.commit()
     
     return True 
+
+# Communities Functionality
+
+@app.get('/communities/create')
+def get_create_page():
+    return render_template('create_community.html', loggedIn=True)
+
+@app.post('/communities/create')
+def create_community():
+    # check if user is logged in, else prompt to login first
+    if 'username' not in session:
+        return redirect('/login', error="You must login before creating a community.")
+    # Get form data for creating a community
+    name = request.form.get('name')
+    subject = 'Miscellaneous'
+    if not name or not subject:
+        abort(400)
+    # Check if name is already taken
+    community = Community.query.filter_by(name=name).first()
+    if not community:
+        redirect('/communities/create', 302)
+    # Create community with data and current user as owner
+    user = User.query.filter_by(username=session['username']).first()
+    community = Community(name=name, subject=subject, pfpic='default.png', owner_id=user.id)
+    # append community to user_community
+    db.session.add(community)
+    user.communities.append(community)
+    db.session.commit()
+
+    return redirect('/communities', 302)
+
+@app.post('/communities/join/<id>')
+def join_community(id: int):
+    if 'username' not in session:
+        redirect('/login', 302)
+    # Add user to the community
+    user = User.query.filter_by(username=session['username']).first()
+    community = Community.query.filter_by(id=id).first()
+    user.communities.append(community)
+    db.session.commit()
+    return redirect('/communities', 302)
+
+@app.post('/communities/delete/<id>')
+def delete_community(id):
+    if 'username' not in session:
+        redirect('/login', 302)
+    user = User.query.filter_by(username=session['username']).first()
+    community = Community.query.filter_by(id=id).first()
+    if user.id != community.owner_id:
+        abort(400)
+
+    db.session.delete(community)
+    db.session.commit()
+    return redirect('/communities', 302)
+    
+@app.post('/communities/remove/<id>')
+def remove_community(id):
+    if 'username' not in session:
+        redirect('/login', 302)
+    user = User.query.filter_by(username=session['username']).first()
+    community = Community.query.filter_by(id=id).first()
+    if user.id == community.owner_id:
+        abort(400)
+    
+    user.communities.remove(community)
+    db.session.commit()
+    return redirect('/communities', 302)
+# Post Functionality
+
+@app.get('/post/create')
+def get_create_post():
+    if 'username' not in session:
+        return redirect('/login', 302)
+    return render_template('create_post.html', loggedIn=True)
