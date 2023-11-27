@@ -1,49 +1,5 @@
-{% extends "_template.html" %} 
-
-{% block title %}Login{% endblock %} 
-{% block body %}
-<style>
-  .login-container {
-    text-align: center;
-    margin-top: 100px;
-  }
-
-  .login-form {
-    width: 300px;
-    margin: auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-  }
-
-  label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: bold;
-  }
-
-  .input-field {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 12px;
-    box-sizing: border-box;
-  }
-
-  .submit-btn {
-    width: 100%;
-    padding: 10px;
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-
-  .submit-btn:hover {
-    background-color: #45a049;
-  }
-</style>
+{% extends "_template.html" %} {% block title %}Login{% endblock %} {% block
+body %}
 <div style="text-align: center; margin-top: 100px">
   <form method="post" action="/login">
     <label for="username_email">Username/Email:</label>

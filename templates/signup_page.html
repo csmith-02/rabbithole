@@ -1,61 +1,24 @@
-{% extends "_template.html" %}
-
-{% block title %} {% endblock %}
-             
-{% block body %} 
+{% extends "_template.html" %} {% block title %} {% endblock %} {% block body %}
 <div style="text-align: center; margin-top: 100px">
-  <form method="post" action="/signup">
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required /><br /><br />
+  <h2>User Registration</h2>
 
+  <form id="userForm">
     <label for="username">Username:</label>
-    <input type="text" id="username" name="username" required /><br /><br />
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required /><br /><br />
+    <input type="text" id="username" name="username" required /><br />
 
-    <input type="submit" value="Sign Up" />
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required /><br />
+
+    <label for="pfpic">Profile Picture URL:</label>
+    <input type="text" id="pfpic" name="pfpic" /><br />
+
+    <label for="bio">Bio:</label>
+    <textarea id="bio" name="bio"></textarea><br />
+
+    <label for="hashpw">Password:</label>
+    <input type="password" id="hashpw" name="hashpw" required /><br />
+
+    <button type="button" onclick="submitForm()">Create User</button>
   </form>
 </div>
-<style>
-  .signup-container {
-    text-align: center;
-    margin-top: 100px;
-  }
-
-  .signup-form {
-    width: 300px;
-    margin: auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-  }
-
-  label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: bold;
-  }
-
-  .input-field {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 12px;
-    box-sizing: border-box;
-  }
-
-  .submit-btn {
-    width: 100%;
-    padding: 10px;
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-
-  .submit-btn:hover {
-    background-color: #45a049;
-  }
-</style>
 {% endblock %}
