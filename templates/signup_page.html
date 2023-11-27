@@ -1,61 +1,106 @@
-{% extends "_template.html" %}
-
-{% block title %} {% endblock %}
-             
-{% block body %} 
-<div style="text-align: center; margin-top: 100px">
-  <form method="post" action="/signup">
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required /><br /><br />
-
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="username" required /><br /><br />
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required /><br /><br />
-
-    <input type="submit" value="Sign Up" />
-  </form>
-</div>
+{% extends "_template.html" %} {% block title %} {% endblock %} {% block body %}
 <style>
-  .signup-container {
-    text-align: center;
-    margin-top: 100px;
+  body {
+    background-color: #ffffff;
+    font-family: Arial, sans-serif;
+    color: #51b178;
   }
 
-  .signup-form {
-    width: 300px;
-    margin: auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f9f9f9;
+  .navbar {
+    background-color: #ffffff;
   }
 
-  label {
-    display: block;
-    margin-bottom: 8px;
+  .navbar-brand,
+  .nav-link {
+    color: #51b178;
+    font-size: 1.5em;
     font-weight: bold;
   }
 
-  .input-field {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 12px;
-    box-sizing: border-box;
+  .navbar-brand img {
+    height: 115px;
+    width: 115px;
   }
 
-  .submit-btn {
-    width: 100%;
+  .container {
+    max-width: 600px;
+    margin-top: 100px;
+  }
+
+  h1 {
+    font-size: 5em;
+    margin-bottom: 30px;
+    font-weight: bold;
+    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+      "Lucida Sans", Arial, sans-serif;
+    color: #51b178;
+  }
+
+  .lead {
+    font-size: 1.25em;
+    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+      "Lucida Sans", Arial, sans-serif;
+    margin-bottom: 30px;
+    color: #ffffff;
+    background-color: #51b178;
     padding: 10px;
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+    display: inline-block;
+    border-radius: 20px;
   }
 
-  .submit-btn:hover {
-    background-color: #45a049;
+  .btn-primary {
+    background-color: #90ee90;
+    border-color: #90ee90;
+    color: #000000;
+  }
+
+  .footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: #f5f5dc;
+    color: #000000;
+    text-align: center;
+    padding: 10px 0;
+  }
+  .space {
+    margin-right: 10px;
+
+    padding: 10px 0;
+  }
+  .container.text-center {
+    margin-top: 0;
   }
 </style>
+<div style="text-align: center; margin-top: 100px">
+  <h2>User Registration</h2>
+
+  <form id="userForm">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required /><br />
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required /><br />
+
+    <label for="pfpic">Profile Picture URL:</label>
+    <input type="text" id="pfpic" name="pfpic" /><br />
+
+    <label for="bio">Bio:</label>
+    <textarea id="bio" name="bio"></textarea><br />
+
+    <label for="hashpw">Password:</label>
+    <input type="password" id="hashpw" name="hashpw" required /><br />
+
+    <button type="button" onclick="submitForm()">Create User</button>
+  </form>
+</div>
+<footer class="footer">
+  <div class="container text-center">
+    <h1>RabbitHole</h1>
+    <span class="text-muted">Copyright © 2021 RabbitHole, Inc.</span>
+    <a href="#">Contact Us</a>
+    <a href="#">About Us</a>
+  </div>
+</footer>
 {% endblock %}

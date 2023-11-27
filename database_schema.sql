@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS users (
     id SERIAL NOT NULL,
     username VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
-    pfpic VARCHAR(255),
+    pfpic VARCHAR(255) NULL,
     bio TEXT NULL,
     hashpw VARCHAR(255) NOT NULL,
     PRIMARY KEY (id),
