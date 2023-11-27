@@ -37,12 +37,13 @@ def home():
 def community():
     if 'username' in session:
         loggedIn=True
-        communities = User.query.filter_by(username=session['username']).all()
+        user = User.query.filter_by(username=session['username']).first()
     else:
-        communities = Community.query.all()
         loggedIn=False
-    
-    return render_template('community_page.html', loggedIn=loggedIn, communities=communities)
+        user = None
+    communities = Community.query.all()
+
+    return render_template('community_page.html', loggedIn=loggedIn, communities=communities, user=user)
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
@@ -106,3 +107,77 @@ def perform_signup(username, email, raw_password):
     db.session.commit()
     
     return True 
+
+# Communities Functionality
+
+@app.get('/communities/create')
+def get_create_page():
+    return render_template('create_community.html', loggedIn=True)
+
+@app.post('/communities/create')
+def create_community():
+    # check if user is logged in, else prompt to login first
+    if 'username' not in session:
+        return redirect('/login', error="You must login before creating a community.")
+    # Get form data for creating a community
+    name = request.form.get('name')
+    subject = 'Miscellaneous'
+    if not name or not subject:
+        abort(400)
+    # Check if name is already taken
+    community = Community.query.filter_by(name=name).first()
+    if not community:
+        redirect('/communities/create', 302)
+    # Create community with data and current user as owner
+    user = User.query.filter_by(username=session['username']).first()
+    community = Community(name=name, subject=subject, pfpic='default.png', owner_id=user.id)
+    # append community to user_community
+    db.session.add(community)
+    user.communities.append(community)
+    db.session.commit()
+
+    return redirect('/communities', 302)
+
+@app.post('/communities/join/<id>')
+def join_community(id: int):
+    if 'username' not in session:
+        redirect('/login', 302)
+    # Add user to the community
+    user = User.query.filter_by(username=session['username']).first()
+    community = Community.query.filter_by(id=id).first()
+    user.communities.append(community)
+    db.session.commit()
+    return redirect('/communities', 302)
+
+@app.post('/communities/delete/<id>')
+def delete_community(id):
+    if 'username' not in session:
+        redirect('/login', 302)
+    user = User.query.filter_by(username=session['username']).first()
+    community = Community.query.filter_by(id=id).first()
+    if user.id != community.owner_id:
+        abort(400)
+
+    db.session.delete(community)
+    db.session.commit()
+    return redirect('/communities', 302)
+    
+@app.post('/communities/remove/<id>')
+def remove_community(id):
+    if 'username' not in session:
+        redirect('/login', 302)
+    user = User.query.filter_by(username=session['username']).first()
+    community = Community.query.filter_by(id=id).first()
+    if user.id == community.owner_id:
+        abort(400)
+    
+    user.communities.remove(community)
+    db.session.commit()
+    return redirect('/communities', 302)
+# Post Functionality
+
+@app.get('/post/create')
+def get_create_post():
+    if 'username' not in session:
+        return redirect('/login', 302)
+    return render_template('create_post.html', loggedIn=True)
