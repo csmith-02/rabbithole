@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="icon" type="image/x-icon" href="rabbithole/static/RabbitHoleLogo.ico"/>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="rabbithole/static/RabbitHoleLogo.ico"
+    />
     <title>{% block title %}{% endblock %}</title>
     <style>
       body {
@@ -105,7 +111,11 @@
             >
           </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0" style="padding-right: 50px">
+        <form
+          id="searchForm"
+          class="form-inline my-2 my-lg-0"
+          style="padding-right: 50px"
+        >
           <input
             class="form-control mr-sm-2"
             type="search"
@@ -117,8 +127,8 @@
             Search
           </button>
         </form>
-        {% if not loggedIn %} 
-                <a class="btn btn-outline-success my-2 my-sm-0" href="/login">Login</a> 
+        {% if not loggedIn %}
+        <a class="btn btn-outline-success my-2 my-sm-0" href="/login">Login</a>
         {% endif %}
       </div>
     </nav>
@@ -126,13 +136,30 @@
     {% block body %}{% endblock %}
 
     <footer class="footer">
-        <div class="container text-center">
-            <span class="text-muted">Copyright © 2023 RabbitHole, Inc.</span><br>
-            <a href="#">Contact Us</a>
-            <span> | </span>
-            <a href="#">About Us</a>
-        </div>
+      <div class="container text-center">
+        <span class="text-muted">Copyright © 2023 RabbitHole, Inc.</span><br />
+        <a href="#">Contact Us</a>
+        <span> | </span>
+        <a href="#">About Us</a>
+      </div>
     </footer>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-</body>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      document
+        .getElementById("searchForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault(); // Prevent the form from submitting in the default way
+          const username = document.getElementById("searchInput").value.trim();
+
+          if (username.length > 0) {
+            // Redirect to the user profile page
+            window.location.href = "/profile/" + username;
+          }
+        });
+    </script>
+  </body>
 </html>
