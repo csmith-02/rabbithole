@@ -50,12 +50,14 @@
   input[type="submit"]:hover {
     background-color: #45a049;
   }
+
+  
 </style>
 <div class="container">
   <h1>{{ user.username }}'s Profile</h1>
 
   <img
-    src="{{ url_for('static', filename='default_profile_picture.jpg') }}"
+    src="/rabbithole/static/default.png"
     alt="Default Profile Picture"
   />
 
@@ -69,5 +71,18 @@
     <br />
     <input type="submit" value="Update Bio" />
   </form>
+
+  <h2>Edit Username</h2>
+<form method="POST" action="/profile/edit_username">
+    <label for="username">New Username:</label>
+    <input type="text" id="username" name="username" required>
+    <br />
+    <br />
+    <input type="submit" value="Update Username" />
+</form>
+
 </div>
+
+
+
 {% endblock %}

@@ -4,6 +4,9 @@ import os
 from dotenv import load_dotenv
 from models import User, Post, Community, db
 from flask_bcrypt import Bcrypt
+import re
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 load_dotenv()
 
@@ -15,6 +18,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = \
 app.secret_key = os.getenv('APP_SECRET_KEY', 'strawberry')
 db.init_app(app)
 bcrypt = Bcrypt(app)
+
+app.config['UPLOAD_FOLDER'] = '/rabbithole/static/user_profile_images'
 
 @app.route('/rabbithole/static/<path:path>')
 def send_static(path):
@@ -84,6 +89,26 @@ def signup():
         return redirect('/home', 302)
     return render_template('signup_page.html', loggedIn=False)
 
+@app.route('/contact_us')
+def contact():
+    if 'username' in session:
+        loggedIn=True
+        user = User.query.filter_by(username=session['username']).first()
+    else:
+        loggedIn=False
+        user = None
+    return render_template('contact_us_page.html')
+
+@app.route('/about_us')
+def about():
+    if 'username' in session:
+        loggedIn=True
+        user = User.query.filter_by(username=session['username']).first()
+    else:
+        loggedIn=False
+        user = None
+    return render_template('about_us_page.html')
+
 @app.post('/logout')
 def logout():
     del session['username']
@@ -116,6 +141,21 @@ def perform_signup(username, email, raw_password):
     db.session.commit()
     
     return True 
+
+@app.route('/profile/edit_username', methods=['POST'])
+def edit_username():
+    if 'username' not in session:
+        return redirect('/login', 302)
+    new_username = request.form.get('username')
+    user = User.query.filter_by(username=session['username']).first()
+    # Check if the new username is already taken
+    if User.query.filter_by(username=new_username).first():
+        return render_template('profile_page.html', error="Username already taken")
+    user.username = new_username
+    db.session.commit()
+    session['username'] = new_username
+    return redirect('/profile')
+
 
 # Communities Functionality
 
