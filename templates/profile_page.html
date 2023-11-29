@@ -25,6 +25,7 @@ block body %}
 
   form {
     margin-top: 20px;
+    text-align: center;
   }
 
   label {
@@ -37,6 +38,7 @@ block body %}
     padding: 8px;
     box-sizing: border-box;
     margin-bottom: 10px;
+    border-radius: 8px; /* Rounded corners for the bio textarea */
   }
 
   input[type="submit"] {
@@ -51,6 +53,18 @@ block body %}
   input[type="submit"]:hover {
     background-color: #45a049;
   }
+
+  #drop-area {
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  input[type="file"] {
+    display: none;
+  }
 </style>
 <!DOCTYPE html>
 <html lang="en">
@@ -62,21 +76,46 @@ block body %}
   <body>
     <h1>{{ user.username }}'s Profile</h1>
 
-    <img
-      src="{{ url_for('static', filename='default_profile_picture.jpg') }}"
-      alt="Default Profile Picture"
-    />
+    <div id="drop-area" onclick="triggerFileInput()">
+      <img
+        id="profile-image"
+        src="{{ url_for('static', filename='default_profile_picture.jpg') }}"
+        alt="Default Profile Picture"
+      />
+      <p>Click to upload a new profile picture</p>
+      <input
+        type="file"
+        id="file-input"
+        accept="image/*"
+        onchange="previewImage()"
+      />
+    </div>
 
     <h2>Bio</h2>
-    <p>{{ user.bio }}</p>
-
-    <h2>Edit Bio</h2>
     <form method="POST">
-      <label for="bio">Add to your bio:</label>
+      <label for="bio"></label>
       <textarea id="bio" name="bio" rows="4" cols="50">{{ user.bio }}</textarea>
       <br />
       <input type="submit" value="Update Bio" />
     </form>
+
+    <script>
+      function triggerFileInput() {
+        document.getElementById("file-input").click();
+      }
+
+      function previewImage() {
+        var input = document.getElementById("file-input");
+        var img = document.getElementById("profile-image");
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+          img.src = e.target.result;
+        };
+
+        reader.readAsDataURL(input.files[0]);
+      }
+    </script>
   </body>
 </html>
 
