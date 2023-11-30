@@ -1,7 +1,5 @@
-{% extends "_template.html" %} 
-
-{% block title %}RabbitHole | Profile{% endblock %} 
-{% block body %}
+{% extends "_template.html" %} {% block title %}RabbitHole | Profile{% endblock
+%} {% block body %}
 <style>
   body {
     font-family: "Arial", sans-serif;
@@ -51,15 +49,36 @@
     background-color: #45a049;
   }
 
-  
+  #drop-area {
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  input[type="file"] {
+    display: none;
+  }
+
 </style>
 <div class="container">
   <h1>{{ user.username }}'s Profile</h1>
 
-  <img
-    src="/rabbithole/static/default.png"
-    alt="Default Profile Picture"
-  />
+  <div id="drop-area" onclick="triggerFileInput()">
+    <img
+      id="profile-image"
+      src="{{ url_for('static', filename='default_profile_picture.jpg') }}"
+      alt="Default Profile Picture"
+    />
+    <p>Click to upload a new profile picture</p>
+    <input
+      type="file"
+      id="file-input"
+      accept="image/*"
+      onchange="previewImage()"
+    />
+  </div>
 
   <h2>Bio</h2>
   <p>{{ user.bio }}</p>
@@ -81,8 +100,21 @@
     <input type="submit" value="Update Username" />
 </form>
 
-</div>
+<script>
+  function triggerFileInput() {
+    document.getElementById("file-input").click();
+  }
 
+  function previewImage() {
+    var input = document.getElementById("file-input");
+    var img = document.getElementById("profile-image");
+    var reader = new FileReader();
 
+    reader.onload = function (e) {
+      img.src = e.target.result;
+    };
 
+    reader.readAsDataURL(input.files[0]);
+  }
+</script>
 {% endblock %}
