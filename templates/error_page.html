@@ -3,6 +3,86 @@
 {% block title %}RabbitHole-Login Error{% endblock %}
 
 {% block body %}
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+      background-color: #ffffff;
+      font-family: Arial, sans-serif;
+      color: #51b178;
+    }
+  
+    .navbar {
+      background-color: #ffffff;
+    }
+  
+    .navbar-brand,
+    .nav-link {
+      color: #51b178;
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+  
+    .navbar-brand img {
+      height: 115px;
+      width: 115px;
+    }
+  
+    .container {
+      max-width: 600px;
+      margin-top: 100px;
+    }
+  
+    h1 {
+      font-size: 5em;
+      margin-bottom: 30px;
+      font-weight: bold;
+      font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+        "Lucida Sans", Arial, sans-serif;
+      color: #51b178;
+    }
+  
+    .lead {
+      font-size: 1.25em;
+      font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+        "Lucida Sans", Arial, sans-serif;
+      margin-bottom: 30px;
+      color: #ffffff;
+      background-color: #51b178;
+      padding: 10px;
+      display: inline-block;
+      border-radius: 20px;
+    }
+  
+    .btn-primary {
+      background-color: #90ee90;
+      border-color: #90ee90;
+      color: #000000;
+    }
+  
+    .footer {
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      background-color: #f5f5dc;
+      color: #000000;
+      text-align: center;
+      padding: 10px 0;
+    }
+    .space {
+      margin-right: 10px;
+  
+      padding: 10px 0;
+    }
+    .container.text-center {
+      margin-top: 0;
+    }
+  </style>
 <div class="container text-center">
     <h1 class="mt-5">Incorrect Username or Password</h1>
     <a href="home_page.html" class="lead">Jump Down the Rabbit Hole</a>
