@@ -44,7 +44,7 @@ class Post(db.Model):
     uc_id = db.Column(db.Integer, db.ForeignKey('user_community.uc_id'))
 
     def __repr__(self) -> str:
-        return f'<Post {self.post_id}, {self.post_title}, {self.community_id}, {self.user_id}>'
+        return f'<Post {self.id}, {self.title}'
     
 class Reply(db.Model):
     id = db.Column(db.Integer, primary_key=True)

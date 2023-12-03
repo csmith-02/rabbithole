@@ -1,0 +1,20 @@
+{% extends "_template.html" %}
+
+{% block title %}RabbitHole | {{ community.name }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        {% if showPostBtn %}
+        <a href="/rh/{{ community.name }}/post"><button class="btn btn-primary w-100 mb-4">Add a Post +</button></a>
+        {% else %}
+        <h4 class="text-center">Join this community to add a post!</h4>
+        {% endif %}
+        <hr>
+        {% if posts %}
+            {% for post in posts %}
+                <h2>{{ post.title }}</h2>
+                <p>{{ post.content }}</p>
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endblock %}

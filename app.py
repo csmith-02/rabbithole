@@ -2,7 +2,7 @@ from flask import Flask, abort, render_template, redirect, request, send_from_di
 from datetime import datetime
 import os
 from dotenv import load_dotenv
-from models import User, Post, Community, db
+from models import User, Post, Community, db, user_community
 from flask_bcrypt import Bcrypt
 import re
 
@@ -36,7 +36,20 @@ def home():
     if 'username' not in session:
         # Redirect the user to login to access the home route
         return redirect('/login', 302)
-    return render_template('home_page.html', username=session['username'], loggedIn=True)
+    
+    user = User.query.filter_by(username=session['username']).first()
+    posts = []
+
+    communities = user.communities
+
+    for community in communities:
+        ucs = db.session.query(user_community).filter_by(community_id=community.id).all()
+        for uc in ucs:
+            posts.extend(Post.query.filter_by(uc_id=uc[0]).all())
+
+
+    posts.sort(key=lambda user: user.id, reverse=True)
+    return render_template('home_page.html', username=session['username'], loggedIn=True, posts=posts)
 
 @app.route('/communities')
 def community():
@@ -93,21 +106,17 @@ def signup():
 def contact():
     if 'username' in session:
         loggedIn=True
-        user = User.query.filter_by(username=session['username']).first()
     else:
         loggedIn=False
-        user = None
-    return render_template('contact_us_page.html')
+    return render_template('contact_us_page.html', loggedIn=loggedIn)
 
 @app.route('/about_us')
 def about():
     if 'username' in session:
         loggedIn=True
-        user = User.query.filter_by(username=session['username']).first()
     else:
         loggedIn=False
-        user = None
-    return render_template('about_us_page.html')
+    return render_template('about_us_page.html', loggedIn=loggedIn)
 
 @app.post('/logout')
 def logout():
@@ -237,10 +246,82 @@ def remove_community(id):
     user.communities.remove(community)
     db.session.commit()
     return redirect('/communities', 302)
+
+@app.get('/rh/<name>')
+def get_community(name: str):
+    showPostBtn = True
+    loggedIn = True
+    community = Community.query.filter_by(name=name).first()
+    if not community:
+        if 'username' not in session:
+            loggedIn = False
+        return render_template('404.html', name=name, loggedIn=loggedIn)
+    
+    if 'username' not in session:
+        loggedIn = False
+        showPostBtn = False
+    else:
+        user = User.query.filter_by(username=session['username']).first()
+        if user not in community.users:
+            showPostBtn = False
+
+    posts = []
+
+    ucs = db.session.query(user_community).filter_by(community_id=community.id).all()
+
+    for uc in ucs:
+        posts.extend(Post.query.filter_by(uc_id=uc[0]).all())
+    
+    posts.sort(key=lambda post: post.id, reverse=True)
+
+    return render_template('single_community.html', loggedIn=loggedIn, community=community, showPostBtn=showPostBtn, posts=posts)
+
 # Post Functionality
 
-@app.get('/post/create')
-def get_create_post():
+@app.get('/rh/<name>/post')
+def get_create_post(name):
     if 'username' not in session:
         return redirect('/login', 302)
-    return render_template('create_post.html', loggedIn=True)
+    
+    user = User.query.filter_by(username=session['username']).first()
+    community = Community.query.filter_by(name=name).first()
+
+    if user not in community.users:
+        return redirect(f'/rh/{name}', 302)
+
+    return render_template('create_post.html', loggedIn=True, community=community)
+
+@app.post('/rh/<name>/post')
+def create_post(name):
+    if 'username' not in session:
+        return redirect('/login', 302)
+    
+    community = request.form.get('community')
+    title = request.form.get('title')
+    content = request.form.get('content')
+
+    if not community or not title or not content:
+        abort(400)
+
+    # Get current user and current community
+    current_user = User.query.filter_by(username=session['username']).first()
+    current_community = Community.query.filter_by(name=community).first()
+
+    if current_user not in current_community.users:
+        return redirect('/communities', 302)
+
+    # Create a post with the data
+    time_created = datetime.now()
+
+    ucs = db.session.query(user_community).all()
+
+    for uc in ucs:
+        if uc[1] == current_user.id and uc[2] == current_community.id:
+            uc_id = uc[0]
+
+    new_post = Post(time_created=time_created, title=title, content=content, uc_id=uc_id)
+
+    db.session.add(new_post)
+    db.session.commit()
+
+    return redirect(f'/rh/{current_community.name}', 302)

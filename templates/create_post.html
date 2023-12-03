@@ -1,7 +1,25 @@
 {% extends "_template.html" %}
 
-{% block title %}RabbitHole | Create a Post{% endblock%}
+{% block title %}{{ community.name }} | Create a Post{% endblock%}
 
 {% block body %}
-<h1>Create post page</h1>
+<div class="container">
+    <form action="/rh/{{ community.name }}/post" method="post">
+        <div class="d-flex mb-3">
+            <label for="community" class="h3 mr-3">Community: </label>
+            <input type="text" name="community-show" id="community-show" value="{{ community.name }}" class="form-control" disabled />
+            <input type="hidden" name="community" value="{{ community.name }}"/>
+        </div>
+        <div class="d-flex mb-3">
+            <label for="title" class="h3 mr-3">Title: </label>
+            <input type="text" id="title" name="title" class="form-control"/>
+        </div>
+        <div class="d-flex mb-5"> 
+            <p class="h3 mr-3">Content:</p>
+            <textarea class="form-control" id="content" name="content"></textarea>
+        </div>
+        <div class="text-center">
+            <button class="btn btn-primary" type="submit">POST</button>
+        </div>
+    </form>
 {% endblock%}

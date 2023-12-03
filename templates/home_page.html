@@ -85,10 +85,12 @@
   </style>
 <h1 class="text-center">Welcome {{ username }},</h1>
 <div class="container d-flex flex-column">
-    <a href="/post/create"><button class="btn btn-primary w-100 mb-4">Add a Post +</button></a>
     <p style="font-size: 25px;" class="text-center">Feed</p>
     <div class="container ">
-        
+        {% for post in posts %}
+          <h3>{{ post.title }}</h3>
+          <p>{{ post.content }}</p>
+        {% endfor %}
     </div>
     <form action="/logout" method="post">
         <button type="submit" class="btn btn-success btn-rounded ml-2 m-3">Logout</button>
