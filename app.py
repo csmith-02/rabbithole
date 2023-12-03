@@ -36,7 +36,6 @@ def home():
     if 'username' not in session:
         # Redirect the user to login to access the home route
         return redirect('/login', 302)
-    
     user = User.query.filter_by(username=session['username']).first()
     posts = []
 
@@ -48,8 +47,8 @@ def home():
             posts.extend(Post.query.filter_by(uc_id=uc[0]).all())
 
 
-    posts.sort(key=lambda user: user.id, reverse=True)
-    return render_template('home_page.html', username=session['username'], loggedIn=True, posts=posts)
+        posts.sort(key=lambda user: user.id, reverse=True)
+    return render_template('home_page.html', user=user, loggedIn=True, posts=posts)
 
 @app.route('/communities')
 def community():
@@ -274,7 +273,7 @@ def get_community(name: str):
     
     posts.sort(key=lambda post: post.id, reverse=True)
 
-    return render_template('single_community.html', loggedIn=loggedIn, community=community, showPostBtn=showPostBtn, posts=posts)
+    return render_template('single_community.html', loggedIn=loggedIn, community=community, showPostBtn=showPostBtn, posts=posts, user=user)
 
 # Post Functionality
 
@@ -319,9 +318,23 @@ def create_post(name):
         if uc[1] == current_user.id and uc[2] == current_community.id:
             uc_id = uc[0]
 
-    new_post = Post(time_created=time_created, title=title, content=content, uc_id=uc_id)
+    new_post = Post(time_created=time_created, title=title, content=content, uc_id=uc_id, owner=current_user.username, community=current_community.name)
 
     db.session.add(new_post)
     db.session.commit()
 
     return redirect(f'/rh/{current_community.name}', 302)
+
+@app.post('/home/<id>/delete')
+def delete_post_from_home(id):
+    removed_post = Post.query.filter_by(id=id).first()
+    db.session.delete(removed_post)
+    db.session.commit()
+    return redirect('/home', 302)
+
+@app.post('/rh/<community>/<id>/delete')
+def delete_post_from_community(community, id):
+    removed_post = Post.query.filter_by(id=id).first()
+    db.session.delete(removed_post)
+    db.session.commit()
+    return redirect(f'/rh/{community}', 302)

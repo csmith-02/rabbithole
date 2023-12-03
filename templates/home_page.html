@@ -36,6 +36,10 @@
       max-width: 600px;
       margin-top: 100px;
     }
+    .post-image {
+      max-height: 500px;
+      width: 100%;
+  }
   
     h1 {
       font-size: 5em;
@@ -83,17 +87,37 @@
       margin-top: 0;
     }
   </style>
-<h1 class="text-center">Welcome {{ username }},</h1>
-<div class="container d-flex flex-column">
-    <p style="font-size: 25px;" class="text-center">Feed</p>
-    <div class="container ">
-        {% for post in posts %}
-          <h3>{{ post.title }}</h3>
-          <p>{{ post.content }}</p>
-        {% endfor %}
-    </div>
-    <form action="/logout" method="post">
-        <button type="submit" class="btn btn-success btn-rounded ml-2 m-3">Logout</button>
-    </form>
+  <div class="container">
+    {% if posts|length != 0 %}
+    <h1 class="text-center">My Tunnel</h1>
+    {% for post in posts %}
+        <div class="d-flex align-items-center flex-column p-2 border border-1 mb-3">
+            <div class="d-flex justify-content-between w-100 mb-3">
+                <div>
+                    <h3 class>{{ post.title }}</h3>
+                    <a href="/rh/{{ post.community }}"><h4>rh/{{ post.community }}</h4></a>
+                </div>
+                <div class="mt-2">
+                    <h4>{{ post.owner }}</h4>
+                    <h5>{{ post.time_created }}</h5>
+                </div>
+            </div>
+            <div>
+              <img class="post-image border border-1" src="../rabbithole/static/defaultpost.jpg" alt="post image"/>
+              <p class="align-self-start mt-2">{{ post.content }}</p>
+            </div>
+            {% if user.username == post.owner %}
+            <div class="align-self-end">
+              <form action="/home/{{ post.id }}/delete" method="POST">
+                <input type="submit" class="btn btn-danger" value="Delete"/>
+              </form>
+            </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+  {% else %}
+  <h3 class="text-center">Uh Oh! It looks like you aren't apart of any communities or your communities have no posts! Create, join, and interact with a Community!</h3>
+  <a class="text-decoration-none" href="/communities"><h2 class="p-3 mt-5 text-center btn-primary rounded-pill">Browse Communities!</h2></a>
+  {% endif %}
 </div>
 {% endblock %}

@@ -42,6 +42,8 @@ class Post(db.Model):
     image = db.Column(db.String, nullable=True)
     content = db.Column(db.Text, nullable=False)
     uc_id = db.Column(db.Integer, db.ForeignKey('user_community.uc_id'))
+    owner = db.Column(db.String, db.ForeignKey('users.username'))
+    community = db.Column(db.String, db.ForeignKey('community.name'))
 
     def __repr__(self) -> str:
         return f'<Post {self.id}, {self.title}'
