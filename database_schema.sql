@@ -2,7 +2,7 @@ CREATE DATABASE rabbithole;
 
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL NOT NULL,
-    username VARCHAR(255) NOT NULL,
+    username VARCHAR(255) NOT NULL UNIQUE,
     email VARCHAR(255) NOT NULL,
     pfpic VARCHAR(255) NULL,
     bio TEXT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS community (
     id SERIAL NOT NULL,
-    name VARCHAR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL UNIQUE,
     subject VARCHAR(255) NOT NULL,
     pfpic VARCHAR(255) NULL,
     owner_id SERIAL NOT NULL,
@@ -41,13 +41,21 @@ CREATE TABLE IF NOT EXISTS user_community (
 CREATE TABLE IF NOT EXISTS post (
     id SERIAL NOT NULL,
     time_created DATE NOT NULL,
-    title VARCHAR(255) NULL,
+    title VARCHAR(255) NOT NULL,
     image VARCHAR(255) NULL,
     content TEXT NOT NULL,
     uc_id SERIAL NOT NULL,
+    owner VARCHAR(255) NOT NULL,
+    community VARCHAR(255) NOT NULL,
     CONSTRAINT fk_uc_id
         FOREIGN KEY (uc_id)
             REFERENCES user_community(uc_id) ON DELETE CASCADE,
+    CONSTRAINT fk_owner
+        FOREIGN KEY (owner)
+            REFERENCES users(username) ON DELETE CASCADE,
+    CONSTRAINT fk_community
+        FOREIGN KEY (community)
+            REFERENCES community(name),
     PRIMARY KEY (id)
 );
 
