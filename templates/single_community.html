@@ -9,14 +9,17 @@
             width: 100%;
         }
 
-        .profile {
-            height: 50px;
+        .big-profile {
+            height: 150px;
+            width: 150px;
         }
     </style>
     <div class="container">
-        <div class="text-center mb-5">
-            <img class="profile border border-1 float-left rounded-circle" src="../rabbithole/static/defaultpost.jpg" alt="community image"/>
-            <h1>{{ community.name }}</h1>
+        <div class="text-center mb-5 d-flex flex-column align-items-center">
+            <img class="big-profile border border-1 rounded-circle mb-2" src="../rabbithole/static/defaultpost.jpg" alt="community image"/>
+            <div>
+                <h1>{{ community.name }}</h1>
+            </div>
         </div>
         <hr>
         {% if showPostBtn %}
@@ -25,7 +28,7 @@
         <h4 class="text-center">Join this community to add a post!</h4>
         {% endif %}
         <hr>
-        {% if posts %}
+        {% if posts|length > 0 %}
             {% for post in posts %}
                 <div class="d-flex align-items-center flex-column p-2 border border-1 mb-2">
                     <div class="d-flex justify-content-between w-100 mb-3">

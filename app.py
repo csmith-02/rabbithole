@@ -251,6 +251,7 @@ def get_community(name: str):
     showPostBtn = True
     loggedIn = True
     community = Community.query.filter_by(name=name).first()
+    
     if not community:
         if 'username' not in session:
             loggedIn = False
@@ -259,10 +260,12 @@ def get_community(name: str):
     if 'username' not in session:
         loggedIn = False
         showPostBtn = False
+        user = None
     else:
-        user = User.query.filter_by(username=session['username']).first()
-        if user not in community.users:
-            showPostBtn = False
+        user = User.query.filter_by(username=session['username']).first()    
+        
+    if user not in community.users:
+        showPostBtn = False
 
     posts = []
 
