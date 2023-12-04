@@ -16,7 +16,7 @@
     </style>
     <div class="container">
         <div class="text-center mb-5 d-flex flex-column align-items-center">
-            <img class="big-profile border border-1 rounded-circle mb-2" src="../rabbithole/static/defaultpost.jpg" alt="community image"/>
+            <img class="big-profile border border-1 rounded-circle mb-2" src="../rabbithole/static/images/{{ community.pfpic }}" alt="community image"/>
             <div>
                 <h1>{{ community.name }}</h1>
             </div>
@@ -40,7 +40,7 @@
                             <h5>{{ post.time_created }}</h5>
                         </div>
                     </div>
-                    <img class="post-image border border-1" src="../rabbithole/static/defaultpost.jpg" alt="post image"/>
+                    <img class="post-image border border-1" src="../rabbithole/static/images/defaultpost.jpg" alt="post image"/>
                     <p class="align-self-start mt-2">{{ post.content }}</p>
                     {% if user.username == post.owner %}
                     <div class="align-self-end">
