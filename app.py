@@ -171,6 +171,10 @@ def edit_username():
 def get_create_page():
     return render_template('create_community.html', loggedIn=True)
 
+@app.get('/communities/friends')
+def get_friends_page():
+    return render_template('friends.html', loggedIn=True)
+
 @app.post('/communities/create')
 def create_community():
     # check if user is logged in, else prompt to login first
