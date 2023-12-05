@@ -19,7 +19,8 @@ app.secret_key = os.getenv('APP_SECRET_KEY', 'strawberry')
 db.init_app(app)
 bcrypt = Bcrypt(app)
 
-app.config['UPLOAD_FOLDER'] = '/rabbithole/static/user_profile_images'
+app.config['UPLOAD_FOLDER'] = '../rabbithole/static/images/'
+
 
 @app.route('/rabbithole/static/<path:path>')
 def send_static(path):
@@ -199,13 +200,23 @@ def create_community():
         abort(400)
     if not name or not subject:
         abort(400)
+
+    ################
+
+    image = request.files['image']
+    path = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
+    image.save(path)
+
+
+    ################
+
     # Check if name is already taken
     community = Community.query.filter_by(name=name).first()
-    if not community:
-        redirect('/communities/create', 302)
+    if community:
+        return redirect('/communities/create', 302)
     # Create community with data and current user as owner
     user = User.query.filter_by(username=session['username']).first()
-    community = Community(name=name, subject=subject, pfpic='default.png', owner_id=user.id)
+    community = Community(name=name, subject=subject, pfpic=image.filename, owner_id=user.id)
     # append community to user_community
     db.session.add(community)
     user.communities.append(community)
@@ -255,6 +266,7 @@ def get_community(name: str):
     showPostBtn = True
     loggedIn = True
     community = Community.query.filter_by(name=name).first()
+    
     if not community:
         if 'username' not in session:
             loggedIn = False
@@ -263,10 +275,12 @@ def get_community(name: str):
     if 'username' not in session:
         loggedIn = False
         showPostBtn = False
+        user = None
     else:
-        user = User.query.filter_by(username=session['username']).first()
-        if user not in community.users:
-            showPostBtn = False
+        user = User.query.filter_by(username=session['username']).first()    
+        
+    if user not in community.users:
+        showPostBtn = False
 
     posts = []
 

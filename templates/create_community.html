@@ -82,11 +82,16 @@
     .container.text-center {
       margin-top: 0;
     }
+
+    .preview {
+      height: 150px;
+      width: 150px;
+  }
   </style>
 <h1 class="text-center">Create a Community</h1>
 <hr>
 <div class="container">
-    <form action="/communities/create" method="POST">
+    <form action="/communities/create" method="POST" enctype="multipart/form-data">
         <div class="d-flex mb-3">
             <label for="name" class="h3 mr-3">Name: </label>
             <input type="text" id="name" name="name" class="form-control"/>
@@ -103,9 +108,34 @@
                 <option value="6">Miscellaneous</option>
             </select>
         </div>
+        <div class="d-flex mb-5 align-items-center justify-content-center">
+          <p class="h3 mr-3">Upload Image: </p>
+          <input type="file" name="image" id="image" />
+        </div>
+        <div class="d-flex align-items-center justify-content-center mb-5">
+          <p class="h3 mr-3">Preview: </p>
+          <img id="community-image" src="../rabbithole/static/images/default.png" alt="image" class="preview border border-1 rounded-circle"/>
+        </div>
         <div class="text-center">
             <button class="btn btn-primary" type="submit">CREATE</button>
         </div>
     </form>
 </div>
+<script>
+  // script from https://medium.com/geekculture/how-to-preview-images-before-upload-with-javascript-3420e3cd2f1c
+  // Allow for previewing a photo before creating a community
+  const input = document.getElementById('image');
+  const previewPhoto = () => {
+      const file = input.files;
+      if (file) {
+          const fileReader = new FileReader();
+          const preview = document.getElementById('community-image');
+  fileReader.onload = function (event) {
+              preview.setAttribute('src', event.target.result);
+          }
+          fileReader.readAsDataURL(file[0]);
+      }
+  }
+  input.addEventListener("change", previewPhoto);
+</script>
 {% endblock%}
