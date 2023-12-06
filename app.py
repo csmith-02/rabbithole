@@ -199,9 +199,11 @@ def create_community():
 
     # Save the image in the static folder
     image = request.files['image']
-    path = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
-    image.save(path)
-
+    if image: 
+        path = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
+        image.save(path)
+    else:
+        image.filename = 'default.png'
     # Check if name is already taken
     community = Community.query.filter_by(name=name).first()
     if community:
