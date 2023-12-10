@@ -3,8 +3,16 @@
 {% block title %}{{ community.name }} | Create a Post{% endblock%}
 
 {% block body %}
+<style>
+    .preview {
+        height: 400px;
+        width: 100%;
+    }
+</style>
 <div class="container">
-    <form action="/rh/{{ community.name }}/post" method="post">
+    <h3 class="text-center mt-2">Create a Post</h3>
+    <hr>
+    <form action="/rh/{{ community.name }}/create" method="post" enctype="multipart/form-data">
         <div class="d-flex mb-3">
             <label for="community" class="h3 mr-3">Community: </label>
             <input type="text" name="community-show" id="community-show" value="{{ community.name }}" class="form-control" disabled />
@@ -14,12 +22,21 @@
             <label for="title" class="h3 mr-3">Title: </label>
             <input type="text" id="title" name="title" class="form-control"/>
         </div>
+        <div class="d-flex mb-3">
+            <h3 class="mr-3">Image: </h3>
+            <input type="file" name="image" id="image" />
+        </div>
+        <div id="preview" class="d-flex align-items-center justify-content-center mb-5 mx-auto border preview">
+            <p id="placeholder">No Image</p>
+            <!-- <img id="community-image" src="../../rabbithole/static/images/default.png" alt="image" class="preview border border-1"/> -->
+        </div>
         <div class="d-flex mb-5"> 
             <p class="h3 mr-3">Content:</p>
             <textarea class="form-control" id="content" name="content"></textarea>
         </div>
         <div class="text-center">
-            <button class="btn btn-primary" type="submit">POST</button>
+            <button class="btn btn-primary mb-3" type="submit">POST</button>
         </div>
     </form>
+    <script src="../../rabbithole/static/js/preview_image_post.js" defer></script>
 {% endblock%}

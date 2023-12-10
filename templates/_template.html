@@ -78,9 +78,10 @@
       .container.text-center {
         margin-top: 0;
       }
+
     </style>
   </head>
-  <body>
+  <body class="position-relative">
     <nav class="navbar navbar-expand-lg">
       <a class="navbar-brand" href="/"
         ><img src="../../rabbithole/static/images/RabbitHoleLogo.png"
@@ -92,6 +93,7 @@
               class="nav-link"
               href="/"
               style="padding-left: 50px; padding-right: 50px"
+              id="home"
               >Home</a
             >
           </li>
@@ -100,17 +102,13 @@
               class="nav-link"
               href="/communities"
               style="padding-left: 50px; padding-right: 50px"
+              id="community"
               >Community</a
             >
           </li>
           {% if loggedIn %}
           <li class="nav-item">
-            <a
-              class="nav-link"
-              href="/profile"
-              style="padding-left: 50px; padding-right: 50px"
-              >Profile</a
-            >
+            <a class="nav-link" href="/profile" style="padding-left: 50px; padding-right: 50px">Profile</a>
           </li>
           {% endif %}
         </ul>

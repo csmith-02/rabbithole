@@ -37,7 +37,7 @@ class Community(db.Model):
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    time_created = db.Column(TIMESTAMP, nullable=False)
+    time_created = db.Column(db.String, nullable=False)
     title = db.Column(db.String, nullable=False)
     image = db.Column(db.String, nullable=True)
     content = db.Column(db.Text, nullable=False)
