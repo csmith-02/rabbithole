@@ -1,0 +1,17 @@
+<!-- search_page.html -->
+
+{% extends '_template.html' %} {% block title %}Search Results{% endblock %} {%
+block body %}
+<div class="container">
+  <h1>Search Results</h1>
+  {% if search_results %}
+  <ul>
+    {% for result in search_results %}
+    <li><a href="/profile/{{ result.username }}">{{ result.username }}</a></li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>No results found.</p>
+  {% endif %}
+</div>
+{% endblock %}

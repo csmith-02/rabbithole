@@ -165,6 +165,20 @@ def edit_username():
     session['username'] = new_username
     return redirect('/profile')
 
+@app.route('/search')
+def search():
+    query = request.args.get('query', '')
+    
+    if 'username' in session:
+        loggedIn=True
+    else:
+        loggedIn=False
+
+    # Query the database for users with similar usernames
+    search_results = User.query.filter(User.username.ilike(f'%{query}%')).all()
+
+    return render_template('search_page.html', loggedIn=loggedIn, search_results=search_results)
+
 
 # Communities Functionality
 
