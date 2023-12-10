@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 from models import User, Post, Community, db, user_community
 from flask_bcrypt import Bcrypt
-import re
+from pytz import timezone
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
@@ -201,15 +201,13 @@ def create_community():
     if not name or not subject:
         abort(400)
 
-    ################
-
+    # Save the image in the static folder
     image = request.files['image']
-    path = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
-    image.save(path)
-
-
-    ################
-
+    if image: 
+        path = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
+        image.save(path)
+    else:
+        image.filename = 'default.png'
     # Check if name is already taken
     community = Community.query.filter_by(name=name).first()
     if community:
@@ -295,7 +293,7 @@ def get_community(name: str):
 
 # Post Functionality
 
-@app.get('/rh/<name>/post')
+@app.get('/rh/<name>/create')
 def get_create_post(name):
     if 'username' not in session:
         return redirect('/login', 302)
@@ -308,7 +306,7 @@ def get_create_post(name):
 
     return render_template('create_post.html', loggedIn=True, community=community)
 
-@app.post('/rh/<name>/post')
+@app.post('/rh/<name>/create')
 def create_post(name):
     if 'username' not in session:
         return redirect('/login', 302)
@@ -316,6 +314,13 @@ def create_post(name):
     community = request.form.get('community')
     title = request.form.get('title')
     content = request.form.get('content')
+
+    image = request.files['image']
+    if image: 
+        path = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
+        image.save(path)
+    else:
+        image.filename = ''
 
     if not community or not title or not content:
         abort(400)
@@ -328,7 +333,10 @@ def create_post(name):
         return redirect('/communities', 302)
 
     # Create a post with the data
-    time_created = datetime.now()
+    tz = timezone('US/Eastern')
+    format = "%Y-%m-%d %I:%M %p"
+    time_created = datetime.now(tz)
+    time_string = time_created.strftime(format)
 
     ucs = db.session.query(user_community).all()
 
@@ -336,7 +344,7 @@ def create_post(name):
         if uc[1] == current_user.id and uc[2] == current_community.id:
             uc_id = uc[0]
 
-    new_post = Post(time_created=time_created, title=title, content=content, uc_id=uc_id, owner=current_user.username, community=current_community.name)
+    new_post = Post(time_created=time_string, title=title, image=image.filename, content=content, uc_id=uc_id, owner=current_user.username, community=current_community.name)
 
     db.session.add(new_post)
     db.session.commit()
@@ -356,3 +364,16 @@ def delete_post_from_community(community, id):
     db.session.delete(removed_post)
     db.session.commit()
     return redirect(f'/rh/{community}', 302)
+
+@app.post('/rh/<community>/<id>/edit')
+def edit_post_from_community(community, id):
+    post = Post.query.filter_by(id=id).first()
+    title = request.form.get('title')
+    content = request.form.get('content')
+    if title == '' or content == '':
+        return redirect(f'/rh/{community}', 302)
+    post.title = title
+    post.content = content
+    db.session.commit()
+    return redirect(f'/rh/{community}', 302)
+

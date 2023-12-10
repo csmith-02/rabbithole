@@ -5,7 +5,7 @@
 {% block body %}
     <style>
         .post-image {
-            max-height: 500px;
+            height: 400px;
             width: 100%;
         }
 
@@ -13,8 +13,26 @@
             height: 150px;
             width: 150px;
         }
+
+        #modal {
+            min-height: 350px;
+            width: 525px;
+            left: 35%;
+            top: 20%;
+            background-color: white;
+            z-index: 2;
+        }
+
+        .overlay {
+            opacity: 15%;
+        }
+
+        .modal-open {
+            overflow-y: hidden;
+        }
+
     </style>
-    <div class="container">
+    <div id="body" class="container">
         <div class="text-center mb-5 d-flex flex-column align-items-center">
             <img class="big-profile border border-1 rounded-circle mb-2" src="../rabbithole/static/images/{{ community.pfpic }}" alt="community image"/>
             <div>
@@ -23,7 +41,7 @@
         </div>
         <hr>
         {% if showPostBtn %}
-        <a href="/rh/{{ community.name }}/post"><button class="btn btn-primary w-100 mb-4">Add a Post +</button></a>
+        <a href="/rh/{{ community.name }}/create"><button id="addPost" class="btn btn-primary w-100 mb-4">Add a Post +</button></a>
         {% else %}
         <h4 class="text-center">Join this community to add a post!</h4>
         {% endif %}
@@ -36,16 +54,25 @@
                             <h3 class>{{ post.title }}</h3>
                         </div>
                         <div class="mt-2">
-                            <h4>{{ post.owner }}</h4>
-                            <h5>{{ post.time_created }}</h5>
+                            <h5 class="text-right">@{{ post.owner }}</h5>
+                            <h6 class="text-right">{{ post.time_created }}</h6>
                         </div>
                     </div>
-                    <img class="post-image border border-1" src="../rabbithole/static/images/defaultpost.jpg" alt="post image"/>
-                    <p class="align-self-start mt-2">{{ post.content }}</p>
+                    {% if post.image != '' %}
+                    <img class="post-image border border-1" src="../rabbithole/static/images/{{ post.image }}" alt="post image"/>
+                    {% else %}
+                    <!-- insert data here -->
+                    <hr class="w-100">
+                    {% endif %}
+                    <p class="align-self-center text-center mt-2 text-break">{{ post.content }}</p>
                     {% if user.username == post.owner %}
-                    <div class="align-self-end">
+                    <div class="align-self-end d-flex">
+                        <form id="edit-form" action="/rh/{{ post.community }}/{{ post.id }}/edit" method="post">
+                            <!-- <input type="submit" class="edit btn bg-primary mr-2 text-light" value="Edit"/> -->
+                            <button type="button" class="edit btn bg-primary mr-2 text-light">Edit</button>
+                        </form>
                         <form action="/rh/{{ post.community }}/{{ post.id }}/delete" method="POST">
-                          <input type="submit" class="btn btn-danger" value="Delete"/>
+                            <input type="submit" class="btn delete btn-danger" value="Delete"/>
                         </form>
                     </div>
                     {% endif %}
@@ -53,4 +80,5 @@
             {% endfor %}
         {% endif %}
     </div>
+    <script src="../rabbithole/static/js/edit_post.js" defer></script>
 {% endblock %}
