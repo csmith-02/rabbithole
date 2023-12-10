@@ -37,9 +37,9 @@
       margin-top: 100px;
     }
     .post-image {
-      max-height: 500px;
+      height: 400px;
       width: 100%;
-  }
+    }
   
     h1 {
       margin-bottom: 30px;
@@ -93,25 +93,22 @@
         <div class="d-flex align-items-center flex-column p-2 border border-1 mb-3">
             <div class="d-flex justify-content-between w-100 mb-3">
                 <div>
-                    <h3 class>{{ post.title }}</h3>
-                    <a href="/rh/{{ post.community }}"><h4>rh/{{ post.community }}</h4></a>
+                    <h2>{{ post.title }}</h2>
+                    <a href="/rh/{{ post.community }}"><h6>rh/{{ post.community }}</h6></a>
                 </div>
-                <div class="mt-2">
-                    <h4>{{ post.owner }}</h4>
-                    <h5>{{ post.time_created }}</h5>
+                <div class="d-flex flex-column mt-2">
+                    <h5 class="text-right">@{{ post.owner }}</h5>
+                    <h6 class="text-right">{{ post.time_created }}</h6>
                 </div>
             </div>
-            <div>
-              <img class="post-image border border-1" src="../rabbithole/static/images/defaultpost.jpg" alt="post image"/>
-              <p class="align-self-start mt-2">{{ post.content }}</p>
+            <div class="d-flex flex-column w-100">
+              {% if post.image != '' %}
+              <img class="post-image border border-1" src="../rabbithole/static/images/{{ post.image }}" alt="post image"/>
+              {% else %}
+              <hr class="w-100">
+              {% endif %}
+              <p class="align-self-center mt-2 text-center text-break">{{ post.content }}</p>
             </div>
-            {% if user.username == post.owner %}
-            <div class="align-self-end">
-              <form action="/home/{{ post.id }}/delete" method="POST">
-                <input type="submit" class="btn btn-danger" value="Delete"/>
-              </form>
-            </div>
-            {% endif %}
         </div>
     {% endfor %}
   {% else %}

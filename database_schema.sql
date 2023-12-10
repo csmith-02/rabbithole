@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS user_community (
 
 CREATE TABLE IF NOT EXISTS post (
     id SERIAL NOT NULL,
-    time_created DATE NOT NULL,
+    time_created VARCHAR(25) NOT NULL,
     title VARCHAR(255) NOT NULL,
     image VARCHAR(255) NULL,
     content TEXT NOT NULL,

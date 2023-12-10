@@ -3,8 +3,8 @@
 {% block title %}Page Not Found{% endblock %}
 
 {% block body %}
-    <div class="container text-center mt-5">
-        <h1>404: Page '{{ name }}' not found.</h1>
+    <div class="container text-center mt-5 text-danger">
+        <h1>404: Page <u>'{{ name }}'</u> not found.</h1>
         <p>Please make sure the information you entered was correct.</p>
     </div>
 {% endblock %}
