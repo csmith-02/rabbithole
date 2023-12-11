@@ -118,6 +118,13 @@ def about():
         loggedIn=False
     return render_template('about_us_page.html', loggedIn=loggedIn)
 
+@app.route('/profile/<username>')
+def view_profile(username):
+    user = User.query.filter_by(username=username).first()
+    if not user:
+        abort(404)  # User not found
+    return render_template('user_profile_page.html', user=user)
+
 @app.post('/logout')
 def logout():
     del session['username']

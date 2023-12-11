@@ -8,6 +8,7 @@ block body %}
   <ul>
     {% for result in search_results %}
     <li><a href="/profile/{{ result.username }}">{{ result.username }}</a></li>
+    <!-- Add other user information if needed -->
     {% endfor %}
   </ul>
   {% else %}
