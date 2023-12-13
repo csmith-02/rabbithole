@@ -81,7 +81,9 @@
 </style>
 <div style="text-align: center; margin-top: 100px">
   <h2>User Registration</h2>
-
+  {% if error %}
+    <p class="bg-danger text-light w-25 mx-auto">{{ error }}</p>
+  {% endif %}
   <form id="userForm" action="/signup" method="POST">
     <label for="username">Username:</label>
     <input type="text" id="username" name="username" min="2" max="15" required /><br />

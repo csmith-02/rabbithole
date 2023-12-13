@@ -41,6 +41,7 @@ class Post(db.Model):
     title = db.Column(db.String, nullable=False)
     image = db.Column(db.String, nullable=True)
     content = db.Column(db.Text, nullable=False)
+    reply_count = db.Column(db.Integer, nullable=False)
     uc_id = db.Column(db.Integer, db.ForeignKey('user_community.uc_id'))
     owner = db.Column(db.String, db.ForeignKey('users.username'))
     community = db.Column(db.String, db.ForeignKey('community.name'))
@@ -50,7 +51,7 @@ class Post(db.Model):
     
 class Reply(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    time_created = db.Column(TIMESTAMP, nullable=False)
+    time_created = db.Column(db.String, nullable=False)
     content = db.Column(db.Text, nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
-    parent_id = db.Column(db.Integer, db.ForeignKey('reply.parent_id'), nullable=True)
+    owner = db.Column(db.String, db.ForeignKey('users.username'), nullable=False)
