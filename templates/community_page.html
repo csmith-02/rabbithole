@@ -16,17 +16,19 @@
         .container.loggedin {
             max-height: 400px !important;
         }
-
-        .container.community {
-            max-height: 300px !important;
-        }
     </style> -->
 
     <style>
         .profile {
             height: 70px;
             width: 70px;
+            object-fit: cover;
         }
+
+        .container.community {
+            max-height: 325px !important;
+        }
+
         body {
           background-color: #ffffff;
           font-family: Arial, sans-serif;
@@ -50,8 +52,8 @@
         }
       
         .container {
-          max-height: 600px;
-          min-width: 55%;
+          max-height: 600px !important;
+          min-width: 40% !important;
         }
       
         h1 {
@@ -98,6 +100,14 @@
         .container.text-center {
           margin-top: 0;
         }
+
+        .dot {
+            height: 8px;
+            width: 8px;
+            border-radius: 50%;
+            background-color: black;
+        }
+
       </style>
 
     {% if loggedIn %}
@@ -110,19 +120,24 @@
                     <div>
                         <img class="profile float-left mr-3 rounded-circle border border-3" src="../rabbithole/static/images/{{ community.pfpic }}">
                     </div>
-                    <h2 class="mr-5">{{ community.name }}</h2>
-                    <h2 class="mr-5">{{ community.subject }}</h2>
+                    <div class="text-center d-flex align-items-center">
+                        <h3 class="mr-3">{{ community.name }}</h3>
+                        <span class="dot mr-3"></span>
+                        <h3>{{ community.subject }}</h3>
+                    </div>
                     <div class="d-flex">
-                        <a href="/rh/{{ community.name }}"><button class="btn btn-primary mr-1">VIEW</button></a>
-                        {% if user.id == community.owner_id %}
-                            <form action="/communities/delete/{{ community.id }}" method="POST">
-                                <button type="submit" class="btn btn-danger">DELETE</button>
-                            </form>
-                        {% else %}
-                            <form action="/communities/remove/{{ community.id }}" method="POST">
-                                <button type="submit" class="btn btn-warning">REMOVE</button>
-                            </form>
-                        {% endif %}
+                            <a href="/rh/{{ community.name }}"><button class="btn btn-primary mr-1">VIEW</button></a>
+                            {% if user.id == community.owner_id %}
+                                <form action="/communities/delete/{{ community.id }}" method="POST">
+                                    <button type="submit" class="btn btn-danger">DELETE</button>
+                                </form>
+                            {% else %}
+                                {% if community.name != 'RabbitHole' %}
+                                <form action="/communities/remove/{{ community.id }}" method="POST">
+                                    <button type="submit" class="btn btn-warning">REMOVE</button>
+                                </form>
+                                {% endif %}
+                            {% endif %}
                     </div>
                 </div>
             {% endfor %}
@@ -131,30 +146,26 @@
         {% endif %}
         <div class="w-25 d-flex flex-column m-auto inline">
             <a href="/communities/create"><button class="btn btn-primary w-100">Create a Community +</button></a>
-            <!-- <a href="\create_community.html"><button class="btn btn-primary w-100">Create a Community +</button></a> 
-            Why don't we directly link?-->
         </div>
         <hr>
         <div class="w-25 d-flex flex-column m-auto inline">
             <a href="/communities/friends"><button class="btn btn-primary w-100">Friends</button></a>
+        </div>
         <hr>
         <h1 class="text-center">Communities</h1>
-        <div class="container loggedin border border-3 overflow-auto text-center">
-            <div class="d-flex flex-nowrap justify-content-between align-items-center p-3">
-                <h1></h1>
-                <p class="h3">Name</p>
-                <p class="h3">Subject</p>
-                <h1></h1>
-            </div>
-            <hr>
+        <hr>
+        <div class="container community loggedin border border-3 overflow-auto text-center">
             {% for community in communities %}
                 {% if community not in user.communities %}
-                    <div class="d-flex flex-nowrap justify-content-between align-items-center p-3">
+                    <div class="d-flex flex-nowrap justify-content-around align-items-center p-3">
                         <div>
                             <img class="profile float-left mr-3 rounded-circle border border-3" src="../rabbithole/static/images/{{ community.pfpic }}">
                         </div>
-                        <h2 class="mr-5">{{ community.name }}</h2>
-                        <h2 class="mr-5">{{ community.subject }}</h2>
+                        <div class="text-center d-flex align-items-center">
+                            <h3 class="mr-3">{{ community.name }}</h3>
+                            <span class="dot mr-3"></span>
+                            <h3>{{ community.subject }}</h3>
+                        </div>
                         <div class="d-flex">
                             <a href="/rh/{{ community.name }}"><button class="btn btn-primary mr-2">VIEW</button></a>
                             <form action="/communities/join/{{ community.id }}" method="POST">
@@ -171,26 +182,24 @@
         <p class="text-center">You must be logged in to post to a community.</p>
         <hr>
         <div class="container border border-3 overflow-auto text-center">
-            <div class="d-flex flex-nowrap justify-content-between align-items-center p-3">
-                <h1></h1>
-                <p class="h3">Name</p>
-                <p class="h3">Subject</p>
-                <h1></h1>
-            </div>
-            <hr>
             {% for community in communities %}
+            {% if community.name != 'RabbitHole' %}
             <div class="d-flex flex-nowrap justify-content-between align-items-center p-3">
-                {% if community.pfpic == None %}
-                    <img class="profile float-left mr-3 rounded-circle border border-3" src="rabbithole/static/default.png"/>
+                {% if community.pfpic == '' %}
+                    <img class="profile float-left mr-3 rounded-circle border border-3" src="../../../rabbithole/static/images/default.png"/>
                 {% else %}
-                    <img class="profile float-left mr-3 rounded-circle border border-3" src="rabbithole/static/{{ community.pfpic }}">
-                {% endif%}
-                <h2 class="mr-5">{{ community.name }}</h2>
-                <h2 class="mr-5 mb-5">{{ community.subject }}</h2>
+                    <img class="profile float-left mr-3 rounded-circle border border-3" src="../../../rabbithole/static/images/{{ community.pfpic }}">
+                {% endif %}
+                <div class="d-flex align-items-center">
+                    <h2 class="mr-3">{{ community.name }}</h2>
+                    <span class="dot mr-3"></span>
+                    <h2>{{ community.subject }}</h2>
+                </div>
                 <div>
                     <a href="/rh/{{ community.name }}"><button class="btn btn-primary">VIEW</button></a>
                 </div>
             </div>
+            {% endif %}
             {% endfor %}
         </div>
     {% endif %}

@@ -46,6 +46,7 @@ CREATE TABLE IF NOT EXISTS post (
     content TEXT NOT NULL,
     uc_id SERIAL NOT NULL,
     owner VARCHAR(255) NOT NULL,
+    reply_count INTEGER NOT NULL,
     community VARCHAR(255) NOT NULL,
     CONSTRAINT fk_uc_id
         FOREIGN KEY (uc_id)
@@ -61,13 +62,13 @@ CREATE TABLE IF NOT EXISTS post (
 
 CREATE TABLE IF NOT EXISTS reply (
     id SERIAL NOT NULL,
-    time_created DATE NOT NULL,
+    time_created VARCHAR(25) NOT NULL,
     content TEXT NOT NULL,
     post_id SERIAL NOT NULL,
-    parent_id SERIAL NOT NULL,
-    CONSTRAINT fk_parent_id
-        FOREIGN KEY (parent_id)
-            REFERENCES reply(id) ON DELETE CASCADE,
+    owner VARCHAR(255) NOT NULL,
+    CONSTRAINT fk_owner
+        FOREIGN KEY (owner)
+            REFERENCES users(username),
     CONSTRAINT fk_post_id
         FOREIGN KEY (post_id)
             REFERENCES post(id) ON DELETE CASCADE,

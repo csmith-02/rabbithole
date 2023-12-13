@@ -6,18 +6,20 @@
     <style>
         .post-image {
             height: 400px;
-            width: 100%;
+            width: 500px;
+            object-fit: cover;
         }
 
         .big-profile {
             height: 150px;
             width: 150px;
+            object-fit: cover;
         }
 
         #modal {
             min-height: 350px;
             width: 525px;
-            left: 35%;
+            left: 40%;
             top: 20%;
             background-color: white;
             z-index: 2;
@@ -31,6 +33,23 @@
             overflow-y: hidden;
         }
 
+        .container {
+            max-height: 600px !important;
+            width: 650px !important;
+        }
+
+        .spacing {
+            height: 100px;
+            width: 100%;
+        }
+
+        #comment-btn {
+            opacity: 50%;
+        }
+        #comment-btn:hover {
+            text-decoration: underline;
+        }
+
     </style>
     <div id="body" class="container">
         <div class="text-center mb-5 d-flex flex-column align-items-center">
@@ -39,21 +58,22 @@
                 <h1>{{ community.name }}</h1>
             </div>
         </div>
-        <hr>
-        {% if showPostBtn %}
+        {% if community.name == "RabbitHole" and user.username != rabbithole.username %}
+        <!-- Don't show add a post button: only RabbitHole can add posts to their page. -->
+        {% elif showPostBtn %}
         <a href="/rh/{{ community.name }}/create"><button id="addPost" class="btn btn-primary w-100 mb-4">Add a Post +</button></a>
         {% else %}
-        <h4 class="text-center">Join this community to add a post!</h4>
+        <h4 class="text-center">Join this community to interact with a post!</h4>
         {% endif %}
         <hr>
         {% if posts|length > 0 %}
             {% for post in posts %}
-                <div class="d-flex align-items-center flex-column p-2 border border-1 mb-2">
+                <div class="d-flex align-items-center flex-column p-2 border border-1 mb-3">
                     <div class="d-flex justify-content-between w-100 mb-3">
-                        <div>
-                            <h3 class>{{ post.title }}</h3>
+                        <div class="w-100">
+                            <h3 class="text-break w-75">{{ post.title }}</h3>
                         </div>
-                        <div class="mt-2">
+                        <div class="mt-2 w-50">
                             <h5 class="text-right">@{{ post.owner }}</h5>
                             <h6 class="text-right">{{ post.time_created }}</h6>
                         </div>
@@ -61,23 +81,29 @@
                     {% if post.image != '' %}
                     <img class="post-image border border-1" src="../rabbithole/static/images/{{ post.image }}" alt="post image"/>
                     {% else %}
-                    <!-- insert data here -->
                     <hr class="w-100">
                     {% endif %}
                     <p class="align-self-center text-center mt-2 text-break">{{ post.content }}</p>
-                    {% if user.username == post.owner %}
-                    <div class="align-self-end d-flex">
-                        <form id="edit-form" action="/rh/{{ post.community }}/{{ post.id }}/edit" method="post">
-                            <!-- <input type="submit" class="edit btn bg-primary mr-2 text-light" value="Edit"/> -->
-                            <button type="button" class="edit btn bg-primary mr-2 text-light">Edit</button>
-                        </form>
-                        <form action="/rh/{{ post.community }}/{{ post.id }}/delete" method="POST">
-                            <input type="submit" class="btn delete btn-danger" value="Delete"/>
-                        </form>
+                    <div class="d-flex flex-column w-100">
+                        {% if loggedIn and community in user.communities %}
+                        <a href="/rh/{{ post.community }}/{{ post.id }}/comments"><button type="submit" id="comment-btn" class="bg-transparent border-0 align-self-start" >Comments... {{ post.reply_count }}</button></a>
+                        {% endif %}
+                        {% if user.username == post.owner %}
+                            <div class="d-flex w-100 justify-content-end">
+                                <div class="d-flex">
+                                    <form id="edit-form" action="/rh/{{ post.community }}/{{ post.id }}/edit" method="POST">
+                                        <button type="button" class="edit btn bg-primary mr-2 text-light">Edit</button>
+                                    </form>
+                                    <form action="/rh/{{ post.community }}/{{ post.id }}/delete" method="POST">
+                                        <input type="submit" class="btn delete btn-danger" value="Delete"/>
+                                    </form>
+                                </div>
+                            </div>
+                        {% endif %}
                     </div>
-                    {% endif %}
                 </div>
             {% endfor %}
+            <div class="spacing"></div>
         {% endif %}
     </div>
     <script src="../rabbithole/static/js/edit_post.js" defer></script>

@@ -2,7 +2,7 @@ from flask import Flask, abort, render_template, redirect, request, send_from_di
 from datetime import datetime
 import os
 from dotenv import load_dotenv
-from models import User, Post, Community, db, user_community
+from models import User, Post, Community, db, user_community, Reply
 from flask_bcrypt import Bcrypt
 from pytz import timezone
 
@@ -48,7 +48,7 @@ def home():
             posts.extend(Post.query.filter_by(uc_id=uc[0]).all())
 
 
-        posts.sort(key=lambda user: user.id, reverse=True)
+    posts.sort(key=lambda user: user.id, reverse=True)
     return render_template('home_page.html', user=user, loggedIn=True, posts=posts)
 
 @app.route('/communities')
@@ -88,14 +88,24 @@ def login():
 
 @app.route('/signup', methods=['POST', 'GET'])
 def signup():
-
     if request.method == 'POST':
         username = request.form.get('username')
         email = request.form.get('email')
         raw_password = request.form.get('password')
         
         if perform_signup(username, email, raw_password):
-            print("User was created!")
+            rabbithole = Community.query.filter_by(name='RabbitHole').first()
+            rabbitholeUser = User.query.filter_by(username='RabbitHole').first()
+            if not rabbitholeUser:
+                perform_signup('RabbitHole', 'rabbitholeinc@rabbit.com', 'rabbit')
+                rabbitholeUser = User.query.filter_by(username='RabbitHole').first()
+                rabbithole = Community(name='RabbitHole', subject='RabbitHole', pfpic='RabbitHoleLogo.png', owner_id=rabbitholeUser.id)
+                rabbitholeUser.communities.append(rabbithole)
+                db.session.add(rabbithole)
+                db.session.add(rabbitholeUser)
+            newUser = User.query.filter_by(username=username).first()
+            newUser.communities.append(rabbithole)
+            db.session.commit()
         else:
             return render_template('signup_page.html', error="Username already taken")
     if 'username' in session:
@@ -285,7 +295,9 @@ def get_community(name: str):
     showPostBtn = True
     loggedIn = True
     community = Community.query.filter_by(name=name).first()
-    
+    rabbithole = User.query.filter_by(username='RabbitHole').first()
+
+
     if not community:
         if 'username' not in session:
             loggedIn = False
@@ -310,7 +322,7 @@ def get_community(name: str):
     
     posts.sort(key=lambda post: post.id, reverse=True)
 
-    return render_template('single_community.html', loggedIn=loggedIn, community=community, showPostBtn=showPostBtn, posts=posts, user=user)
+    return render_template('single_community.html', loggedIn=loggedIn, community=community, showPostBtn=showPostBtn, posts=posts, user=user, rabbithole=rabbithole)
 
 # Post Functionality
 
@@ -365,19 +377,12 @@ def create_post(name):
         if uc[1] == current_user.id and uc[2] == current_community.id:
             uc_id = uc[0]
 
-    new_post = Post(time_created=time_string, title=title, image=image.filename, content=content, uc_id=uc_id, owner=current_user.username, community=current_community.name)
+    new_post = Post(time_created=time_string, title=title, image=image.filename, content=content, reply_count=0, uc_id=uc_id, owner=current_user.username, community=current_community.name)
 
     db.session.add(new_post)
     db.session.commit()
 
     return redirect(f'/rh/{current_community.name}', 302)
-
-@app.post('/home/<id>/delete')
-def delete_post_from_home(id):
-    removed_post = Post.query.filter_by(id=id).first()
-    db.session.delete(removed_post)
-    db.session.commit()
-    return redirect('/home', 302)
 
 @app.post('/rh/<community>/<id>/delete')
 def delete_post_from_community(community, id):
@@ -398,3 +403,48 @@ def edit_post_from_community(community, id):
     db.session.commit()
     return redirect(f'/rh/{community}', 302)
 
+@app.get('/rh/<community>/<id>/comments')
+def view_post_comments(community, id):
+    currentCommunity = Community.query.filter_by(name=community).first()
+    post = Post.query.filter_by(id=id).first()
+    currentUser = User.query.filter_by(username=session['username']).first()
+    if currentCommunity not in currentUser.communities:
+        return redirect('/home', 302)
+    replies = Reply.query.filter_by(post_id=id).all()
+    
+    replies.sort(key=lambda post: post.id, reverse=True)
+    return render_template('single_post.html', loggedIn=True, community=currentCommunity, post=post, user=currentUser, replies=replies)
+
+@app.post('/rh/<community>/<id>/comments')
+def post_comment(community, id):
+    content = request.form.get('content')
+    post = Post.query.filter_by(id=id).first()
+    if not content:
+        return redirect(f'/rh/{community}/{id}/comments', 302)
+    # Create a post with the data
+    tz = timezone('US/Eastern')
+    format = "%Y-%m-%d %I:%M %p"
+    time_created = datetime.now(tz)
+    time_string = time_created.strftime(format)
+
+    reply = Reply(time_created=time_string, content=content, post_id=id, owner=session['username'])
+    db.session.add(reply)
+    post.reply_count += 1
+    db.session.commit()
+    return redirect(f'/rh/{community}/{id}/comments', 302)
+
+@app.post('/rh/<community>/<post>/<reply>/delete')
+def delete_comment(community, post, reply):
+    currentCommunity = Community.query.filter_by(name=community).first()
+    currentPost = Post.query.filter_by(id=post).first()
+    toBeDeleted = Reply.query.filter_by(id=reply).first()
+
+    if not currentCommunity or not currentPost or not toBeDeleted:
+        abort(500)
+    
+    db.session.delete(toBeDeleted)
+    currentPost.reply_count -= 1
+
+    db.session.commit()
+
+    return redirect(f'/rh/{community}/{post}/comments')

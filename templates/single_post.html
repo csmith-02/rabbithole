@@ -1,0 +1,117 @@
+{% extends "_template.html" %}
+
+{% block title %}RabbitHole | {{ community.name }}{% endblock %}
+
+{% block body %}
+<style>
+    .container {
+        max-height: 600px !important;
+        width: 650px !important;
+    }
+  
+    .post-image {
+        height: 400px;
+        width: 500px;
+        object-fit: cover;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .add {
+        width: 100px;
+        max-height: 70px;
+    }
+
+    #inputField:focus {
+        cursor: none;
+    }
+
+    .reply {
+        height: 75px;
+        margin-top: 0.25rem;
+    }
+
+    .spacing {
+        height: 100px;
+    }
+
+    #pfpic {
+        height: 40px;
+        width: 40px;
+    }
+
+    #about {
+        width: 190px;
+    }
+
+    .delete {
+        position: absolute;
+        right: -6rem;
+        top: 30%;
+    }
+
+</style>
+<div class="container">
+<div class="d-flex align-items-center flex-column p-2 border border-1 mb-3">
+    <div class="d-flex justify-content-between w-100 mb-3">
+        <div class="w-100">
+            <h3 class="text-break w-75">{{ post.title }}</h3>
+            <a href="/rh/{{ post.community }}"><h6>rh/{{ post.community }}</h6></a>
+        </div>
+        <div class="mt-2 w-50">
+            <h5 class="text-right">@{{ post.owner }}</h5>
+            <h6 class="text-right">{{ post.time_created }}</h6>
+        </div>
+    </div>
+    {% if post.image != '' %}
+    <img class="post-image border border-1" src="../../../rabbithole/static/images/{{ post.image }}" alt="post image"/>
+    {% else %}
+    <hr class="w-100">
+    {% endif %}
+    <p class="align-self-center text-center mt-2 text-break">{{ post.content }}</p>
+</div>
+<div class="w-100 text-center">
+    <button id="add" type="button" class="btn btn-primary w-50">Add a Comment +</button>
+    {% if replies|length != 0 %}
+    <span class="p ml-3">{{ replies|length }} comment(s)</span>
+    {% else %}
+    <p class="text-center mt-4">No comments.</p>
+    {% endif %}
+</div>
+<div id="comment" class="add-comment hidden w-100 mx-auto mt-4">
+    <div id="box" class="text-center">
+        <form class="d-flex" method="POST" action="/rh/{{ community.name }}/{{ post.id }}/comments">
+            <textarea id="inputField" class="form-control" name="content" placeholder="Type to Add a Comment..." minlength="1"></textarea>
+            <button type="submit" class="add ml-3 btn btn-primary">Comment</button>
+            <button type="button" id="cancel" class="add ml-1 bg-transparent text-danger border-0">Cancel</button>
+        </form>
+    </div>
+</div>
+{% if replies|length != 0 %}
+<div class="comment-section mt-4">
+    {% for reply in replies %}
+        <div class="reply w-100 d-flex border pl-3">
+            {% if not user.pfpic %}
+            <img src="../../../rabbithole/static/images/default.png" alt="profile pic" id="pfpic" class="rounded-circle border mr-2 mb-1 align-self-center"/>
+            {% else %}
+            <img src="../../../rabbithole/static/images/{{ user.pfpic }}" alt="profile pic" id="pfpic" class="rounded-circle border mr-2 mb-1 align-self-center"/>
+            {% endif %}
+            <p id="about" class="border-right pr-2 align-self-end">@{{ reply.owner }}<br>{{ reply.time_created }}</p>
+            <div class="d-flex align-self-center w-75 position-relative">
+                <p class="ml-2 mr-2 text-break"><span class="w-50">{{ reply.content }}</span></p>
+                {% if reply.owner == user.username %}
+                <form method="POST" action="/rh/{{ post.community }}/{{ post.id }}/{{ reply.id }}/delete">
+                    <button type="submit" class="delete w-25 bg-transparent border-0 text-danger">Delete</button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+</div>
+<div class="spacing"></div>
+{% endif %}
+</div>
+<script src="../../../rabbithole/static/js/add_comment.js"></script>
+{% endblock %}

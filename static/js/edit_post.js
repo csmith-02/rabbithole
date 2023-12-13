@@ -19,9 +19,9 @@ editBtns.forEach(editBtn => {
             // do nothing, the modal is already up
         } else {
 
-            let postCommunity = editBtn.parentElement.parentElement.parentElement.parentElement.firstElementChild.children.item(1).firstElementChild.textContent
-            let postTitle = editBtn.parentElement.parentElement.parentElement.firstElementChild.firstElementChild.firstElementChild.textContent
-            let postContent = editBtn.parentElement.parentElement.parentElement.children.item(2).textContent
+            let postCommunity = editBtn.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.firstElementChild.children.item(1).firstElementChild.textContent
+            let postTitle = editBtn.parentElement.parentElement.parentElement.parentElement.parentElement.firstElementChild.firstElementChild.firstElementChild.textContent
+            let postContent = editBtn.parentElement.parentElement.parentElement.parentElement.previousElementSibling.textContent
             let editform = (editBtn.parentElement).action
             let modal = createModal(postCommunity, postTitle, postContent, editform)
             
@@ -180,6 +180,8 @@ function createModal(postCommunity, postTitle, postContent, editform) {
     modal.classList.add('position-fixed')
     modal.classList.add('border')
     modal.classList.add('border-dark')
+    modal.classList.add('rounded')
+    modal.classList.add('rounded-2')
 
     // Append All containers together
     communityDiv.appendChild(communityLabel)

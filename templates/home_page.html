@@ -33,12 +33,14 @@
     }
   
     .container {
-      max-width: 600px;
-      margin-top: 100px;
+      max-height: 600px !important;
+      width: 650px !important;
     }
+
     .post-image {
       height: 400px;
-      width: 100%;
+      width: 500px;
+      object-fit: cover;
     }
   
     h1 {
@@ -79,38 +81,52 @@
     }
     .space {
       margin-right: 10px;
-  
       padding: 10px 0;
     }
     .container.text-center {
       margin-top: 0;
     }
+
+    .spacing {
+      width: 100%;
+      height: 100px;
+    }
+
+    #comment-btn {
+      opacity: 50%;
+      margin-left: 0.25rem;
+    }
+    #comment-btn:hover {
+      text-decoration: underline;
+    }
   </style>
   <div class="container">
     {% if posts|length != 0 %}
-    <h1 class="text-center">My Tunnel</h1>
+    <h1 class="text-center">My Burrow</h1>
     {% for post in posts %}
         <div class="d-flex align-items-center flex-column p-2 border border-1 mb-3">
             <div class="d-flex justify-content-between w-100 mb-3">
                 <div>
-                    <h2>{{ post.title }}</h2>
+                    <h3>{{ post.title }}</h3>
                     <a href="/rh/{{ post.community }}"><h6>rh/{{ post.community }}</h6></a>
                 </div>
-                <div class="d-flex flex-column mt-2">
+                <div class="d-flex flex-column mt-2 w-50">
                     <h5 class="text-right">@{{ post.owner }}</h5>
                     <h6 class="text-right">{{ post.time_created }}</h6>
                 </div>
             </div>
             <div class="d-flex flex-column w-100">
               {% if post.image != '' %}
-              <img class="post-image border border-1" src="../rabbithole/static/images/{{ post.image }}" alt="post image"/>
+              <img class="post-image border border-1 align-self-center" src="../rabbithole/static/images/{{ post.image }}" alt="post image"/>
               {% else %}
               <hr class="w-100">
               {% endif %}
               <p class="align-self-center mt-2 text-center text-break">{{ post.content }}</p>
+              <a href="/rh/{{ post.community }}/{{ post.id }}/comments"><button type="submit" id="comment-btn" class="bg-transparent border-0 align-self-start" >Comments... {{ post.reply_count }}</button></a>
             </div>
         </div>
     {% endfor %}
+    <div class="spacing"></div>
   {% else %}
   <h3 class="text-center">Uh Oh! It looks like you aren't apart of any communities or your communities have no posts! Create, join, and interact with a Community!</h3>
   <a class="text-decoration-none" href="/communities"><h2 class="p-3 mt-5 text-center btn-primary rounded-pill">Browse Communities!</h2></a>
