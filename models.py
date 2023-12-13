@@ -27,7 +27,7 @@ class User(db.Model):
     
 class Community(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, nullable=False)
+    name = db.Column(db.String, nullable=False, unique=True)
     subject = db.Column(db.String, nullable=False)
     pfpic = db.Column(db.String, nullable=True)
     owner_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
@@ -44,7 +44,7 @@ class Post(db.Model):
     reply_count = db.Column(db.Integer, nullable=False)
     uc_id = db.Column(db.Integer, db.ForeignKey('user_community.uc_id'))
     owner = db.Column(db.String, db.ForeignKey('users.username'))
-    community = db.Column(db.String, db.ForeignKey('community.name'))
+    community = db.Column(db.String, db.ForeignKey('community.name'), unique=True)
 
     def __repr__(self) -> str:
         return f'<Post {self.id}, {self.title}'
