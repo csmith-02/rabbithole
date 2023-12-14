@@ -94,11 +94,11 @@
 <div class="comment-section mt-4">
     {% for reply in replies %}
         <div class="reply w-100 h-auto d-flex border pl-3">
-            {% if not user.pfpic %}
-            <img src="../../../rabbithole/static/images/default.png" alt="profile pic" id="pfpic" class="rounded-circle border mr-2 mb-1 align-self-center"/>
-            {% else %}
-            <img src="../../../rabbithole/static/images/{{ user.pfpic }}" alt="profile pic" id="pfpic" class="rounded-circle border mr-2 mb-1 align-self-center"/>
-            {% endif %}
+            {% for u in users %}
+                {% if reply.owner == u.username %}
+                <img src="../../../rabbithole/static/images/{{ u.pfpic }}" alt="profile pic" id="pfpic" class="rounded-circle border mr-2 mb-1 align-self-center"/>
+                {% endif %}
+            {% endfor %}
             <p id="about" class="border-right pr-2 align-self-center h-50 my-auto">@{{ reply.owner }}<br>{{ reply.time_created }}</p>
             <div class="d-flex align-self-center w-75 position-relative">
                 <p class="mx-2 text-break"><span class="w-50">{{ reply.content }}</span></p>
