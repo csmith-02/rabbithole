@@ -1,8 +1,97 @@
-{% extends '_template.html' %} {% block title %}User Profile{% endblock %} {%
-block body %}
+{% extends '_template.html' %} 
+
+{% block title %}RabbitHole | {{ user.username }}{% endblock %} 
+
+{% block body %}
+<style>
+  body {
+    font-family: "Arial", sans-serif;
+  }
+
+  h1 {
+    margin-bottom: 30px;
+    font-weight: bold;
+    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+      "Lucida Sans", Arial, sans-serif;
+    color: #51b178;
+  }
+
+  img {
+    max-width: 200px;
+    border-radius: 50%;
+  }
+
+  p {
+    color: #555;
+    line-height: 1.5;
+  }
+
+  form {
+    margin-top: 20px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  textarea {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+  }
+
+  input[type="submit"] {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  input[type="submit"]:hover {
+    background-color: #45a049;
+  }
+
+  #drop-area {
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  .user-image {
+    height: 150px;
+    width: 150px;
+    object-fit: cover;
+  }
+
+</style>
 <div class="container">
-  <h1>User Profile</h1>
-  <p>Username: {{ user.username }}</p>
-  <p>Email: {{ user.email }}</p>
+  <h1 class="text-center">Profile</h1>
+  <div class="d-flex align-items-center justify-content-center">
+    {% if not user.pfpic %}
+    <img id="photo" src="../../../rabbithole/static/images/default.png" alt="default image" class="mb-3 border user-image"/>
+    {% else %}
+    <img id="photo" src="../../../rabbithole/static/images/{{ user.pfpic }}" class="border user-image" alt="user pfpic"/>
+    {% endif %}
+  </div>
+  <div class="border p-5 mt-3 w-75 mx-auto d-flex flex-column">
+    <div class="text-center">
+      <h1>About</h1>
+      {% if not user.bio %}
+      <p class="mt-3 w-50 mx-auto">No bio yet.</p>
+      {% else %}
+      <p class="mt-3 w-50 mx-auto">{{ user.bio }}</p>
+      {% endif %}
+    </div>
+    <div class="ml-3">
+      <h3>Personal Information: </h3>
+      <h6>Username: {{ user.username }}</h6>
+      <h6>Email: {{ user.email }}</h6>
+    </div>
+    <hr class="w-75">
+  </div>
 </div>
 {% endblock %}

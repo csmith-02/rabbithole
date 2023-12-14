@@ -5,9 +5,12 @@
     font-family: "Arial", sans-serif;
   }
 
-  h1,
-  h2 {
-    color: #333;
+  h1 {
+    margin-bottom: 30px;
+    font-weight: bold;
+    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+      "Lucida Sans", Arial, sans-serif;
+    color: #51b178;
   }
 
   img {
@@ -33,11 +36,9 @@
     width: 100%;
     padding: 8px;
     box-sizing: border-box;
-    margin-bottom: 10px;
   }
 
   input[type="submit"] {
-    padding: 10px;
     background-color: #4caf50;
     color: white;
     border: none;
@@ -57,67 +58,99 @@
     cursor: pointer;
   }
 
-  input[type="file"] {
-    display: none;
+  .user-image {
+    height: 150px;
+    width: 150px;
+    object-fit: cover;
   }
 
 </style>
 <div class="container">
-  <h1>{{ user.username }}'s Profile</h1>
-
-  <div id="drop-area" onclick="triggerFileInput()">
-    <img
-      id="profile-image"
-      src="{{ url_for('static', filename='default_profile_picture.jpg') }}"
-      alt="Default Profile Picture"
-    />
-    <p>Click to upload a new profile picture</p>
-    <input
-      type="file"
-      id="file-input"
-      accept="image/*"
-      onchange="previewImage()"
-    />
+  <h1 class="text-center">My Profile</h1>
+  <div class="d-flex align-items-center justify-content-center">
+    {% if not user.pfpic %}
+    <img id="photo" src="../../../rabbithole/static/images/default.png" alt="default image" class="mb-3 border user-image"/>
+    {% else %}
+    <img id="photo" src="../../../rabbithole/static/images/{{ user.pfpic }}" class="border user-image" alt="user pfpic"/>
+    {% endif %}
   </div>
-
-  <h2>Bio</h2>
-  <p>{{ user.bio }}</p>
-
-  <h2>Edit Bio</h2>
-  <form method="POST">
-    <label for="bio">Add to your bio:</label>
-    <textarea id="bio" name="bio" rows="4" cols="50">{{ user.bio }}</textarea>
-    <br />
-    <input type="submit" value="Update Bio" />
+  <div>
+    <form id="profile-image-form" action="/profile/edit_image" method="POST" enctype=multipart/form-data class="d-flex justify-content-center">
+      <button type="button" id="changeBtn" class="btn btn-primary">Change</button>
+      <input id="inputSelect" type="file" class="btn btn-primary" hidden name="image-input" />
   </form>
-
-  <h2>Edit Username</h2>
-<form method="POST" action="/profile/edit_username">
-    <label for="username">New Username:</label>
-    <input type="text" id="username" name="username" required>
-    <br />
-    <br />
-    <input type="submit" value="Update Username" />
-</form>
-<form method="POST" action="/logout">
+  </div>
+  <div class="border p-5 mt-3 w-75 mx-auto d-flex flex-column">
+    <div class="text-center">
+      <h1>About</h1>
+      {% if not user.bio %}
+      <p class="mt-3 w-50 mx-auto">No bio yet.</p>
+      {% else %}
+      <p class="mt-3 w-50 mx-auto">{{ user.bio }}</p>
+      {% endif %}
+    </div>
+    <div class="ml-3">
+      <h3>Personal Information: </h3>
+      <h6>Username: {{ user.username }}</h6>
+      <h6>Email: {{ user.email }}</h6>
+    </div>
+    <hr class="w-75">
+    <div class="align-self-center">
+      <h1>Update Information</h1>
+      <form method="POST" action="/profile/edit_username">
+          <label for="username">New Username:</label>
+          <div class="d-flex">
+            <input type="text" id="username" name="username" required class="form-control">
+            <input type="submit" value="Update Username" class="ml-2" />
+          </div>
+      </form>
+      <form action="/profile/edit_bio" method="POST">
+        <label for="bio" class="mt-3">Add to Bio:</label>
+        <div class="d-flex">
+          <textarea id="bio" name="bio" class="form-control" required class="form-control"></textarea>
+          <input type="submit" value="Add to Bio" class="ml-2" />
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<form method="POST" action="/logout" class="text-center mt-5">
   <input type="submit" value="Logout" class="btn btn-primary"/>
 </form>
-
 <script>
-  function triggerFileInput() {
-    document.getElementById("file-input").click();
+
+  let input = document.getElementById('inputSelect')
+  let changeBtn = document.getElementById('changeBtn')
+
+  const previewPhoto = () => {
+    const file = input.files;
+    if (file) {
+        const fileReader = new FileReader();
+        const preview = document.getElementById('photo');
+        fileReader.onload = function (event) {
+          preview.setAttribute('src', event.target.result);
+        }
+        console.log(preview.src)
+        fileReader.readAsDataURL(file[0]);
+    }
   }
 
-  function previewImage() {
-    var input = document.getElementById("file-input");
-    var img = document.getElementById("profile-image");
-    var reader = new FileReader();
+  input.addEventListener('change', () => {
+    previewPhoto()
 
-    reader.onload = function (e) {
-      img.src = e.target.result;
-    };
+    let form = document.getElementById('profile-image-form')
+    let saveBtn = document.createElement('button')
+    saveBtn.type = 'submit'
+    saveBtn.classList.add('btn')
+    saveBtn.classList.add('btn-primary')
+    saveBtn.classList.add('ml-2')
+    saveBtn.textContent = 'Save'
 
-    reader.readAsDataURL(input.files[0]);
-  }
+    form.appendChild(saveBtn)
+  })
+
+  changeBtn.addEventListener('click', (e => {
+    input.click()
+  }))
 </script>
 {% endblock %}

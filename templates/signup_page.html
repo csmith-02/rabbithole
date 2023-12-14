@@ -80,25 +80,26 @@
   }
 </style>
 <div style="text-align: center; margin-top: 100px">
-  <h2>User Registration</h2>
-  {% if error %}
+  <div class="container d-flex flex-column">
+    <h2>User Registration</h2>
+    {% if error %}
     <p class="bg-danger text-light w-25 mx-auto">{{ error }}</p>
-  {% endif %}
-  <form id="userForm" action="/signup" method="POST">
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="username" min="2" max="15" required /><br />
-
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required /><br />
-
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" min="8" required /><br />
-
-    <button type="submit" class="btn btn-primary">Create User</button>
-  </form>
-
- 
-  
-
+    {% endif %}
+    <form id="userForm" action="/signup" method="POST">
+      <div class="d-flex justify-content-center align-items-center">
+        <label for="username" class="mr-2">Username:</label>
+        <input type="text" id="username" name="username" min="2" max="15" required class="w-50 mb-2 form-control" /><br />
+      </div>
+      <div class="d-flex justify-content-center align-items-center">
+        <label for="email" class="mr-2">Email:</label>
+        <input type="email" id="email" name="email" required class="w-50 form-control mb-2" /><br />
+      </div>
+      <div class="d-flex justify-content-center align-items-center">
+        <label for="password" class="mr-2">Password:</label>
+        <input type="password" id="password" name="password" min="8" required class="w-50 mb-2 form-control"/><br />
+      </div>
+      <button type="submit" class="btn btn-primary">Create User</button>
+    </form>
+  </div>
 </div>
 {% endblock %}

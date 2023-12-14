@@ -130,10 +130,22 @@ def about():
 
 @app.route('/profile/<username>')
 def view_profile(username):
-    user = User.query.filter_by(username=username).first()
-    if not user:
-        abort(404)  # User not found
-    return render_template('user_profile_page.html', user=user)
+    searchedUser = User.query.filter_by(username=username).first()
+
+    if 'username' in session:
+        currentUser = User.query.filter_by(username=session['username']).first()
+        if not currentUser:
+            return redirect('/home', 302)
+        if currentUser.username == username:
+            return redirect('/profile', 302)
+        loggedIn = True
+    else:
+        loggedIn = False
+    
+    if not searchedUser:
+        abort(404)  # currentUser not found
+
+    return render_template('user_profile_page.html', loggedIn=loggedIn, user=searchedUser)
 
 @app.post('/logout')
 def logout():
@@ -181,6 +193,40 @@ def edit_username():
     db.session.commit()
     session['username'] = new_username
     return redirect('/profile')
+
+@app.post('/profile/edit_image')
+def edit_image():
+    if 'username' not in session:
+        return redirect('/home', 302)
+
+    image = request.files['image-input']
+    if image: 
+        path = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
+        image.save(path)
+    else:
+        image.filename = 'default.png'
+    
+    user = User.query.filter_by(username=session['username']).first()
+
+    user.pfpic = image.filename
+
+    db.session.commit()
+
+    return redirect('/profile', 302)
+
+@app.post('/profile/edit_bio')
+def edit_profile_bio():
+    if 'username' not in session:
+        return redirect('/home', 302)
+    
+    user = User.query.filter_by(username=session['username']).first()
+    bio = request.form.get('bio')
+    
+    user.bio = bio
+    db.session.commit()
+
+    return redirect('/profile', 302)
+
 
 @app.route('/search')
 def search():
