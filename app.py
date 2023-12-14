@@ -21,7 +21,6 @@ bcrypt = Bcrypt(app)
 
 app.config['UPLOAD_FOLDER'] = '../rabbithole/static/images/'
 
-
 @app.route('/rabbithole/static/<path:path>')
 def send_static(path):
     return send_from_directory('static', path)
@@ -47,7 +46,6 @@ def home():
         for uc in ucs:
             posts.extend(Post.query.filter_by(uc_id=uc[0]).all())
 
-
     posts.sort(key=lambda user: user.id, reverse=True)
     return render_template('home_page.html', user=user, loggedIn=True, posts=posts)
 
@@ -70,7 +68,6 @@ def profile():
 
     user = User.query.filter_by(username=session['username']).first()
     return render_template('profile_page.html', user=user, loggedIn=True)
-
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
@@ -227,6 +224,19 @@ def edit_profile_bio():
 
     return redirect('/profile', 302)
 
+@app.route('/profile/delete', methods=['POST'])
+def delete_profile():
+    if 'username' not in session:
+        return redirect('/login', 302)
+
+    user = User.query.filter_by(username=session['username']).first()
+
+    db.session.delete(user)
+    db.session.commit()
+
+    session.clear()
+
+    return redirect('/')
 
 @app.route('/search')
 def search():
@@ -241,7 +251,6 @@ def search():
     search_results = User.query.filter(User.username.ilike(f'%{query}%')).all()
 
     return render_template('search_page.html', loggedIn=loggedIn, search_results=search_results)
-
 
 # Communities Functionality
 
@@ -342,7 +351,6 @@ def get_community(name: str):
     loggedIn = True
     community = Community.query.filter_by(name=name).first()
     rabbithole = User.query.filter_by(username='RabbitHole').first()
-
 
     if not community:
         if 'username' not in session:
