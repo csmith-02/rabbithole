@@ -17,13 +17,14 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, unique=True, nullable=False)
     email = db.Column(db.String, unique=True, nullable=False)
+    bio = db.Column(db.Text, nullable=True)
     pfpic = db.Column(db.String, nullable=True)
     hashpw = db.Column(db.String, nullable=False)
 
     communities = db.relationship('Community', secondary=user_community, backref='users')
 
     def __repr__(self) -> str:
-        return f'<User {self.user_id}, {self.user_name}, {self.user_email}>'
+        return f'<User {self.id}, {self.username}, {self.email}>'
     
 class Community(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -40,6 +40,7 @@
     #pfpic {
         height: 40px;
         width: 40px;
+        object-fit: cover;
     }
 
     #about {
@@ -61,7 +62,7 @@
             <a href="/rh/{{ post.community }}"><h6>rh/{{ post.community }}</h6></a>
         </div>
         <div class="mt-2 w-50">
-            <h5 class="text-right">@{{ post.owner }}</h5>
+            <a href="/profile/{{ post.owner }}"><h5 class="text-right">@{{ post.owner }}</h5></a>
             <h6 class="text-right">{{ post.time_created }}</h6>
         </div>
     </div>
@@ -92,15 +93,15 @@
 {% if replies|length != 0 %}
 <div class="comment-section mt-4">
     {% for reply in replies %}
-        <div class="reply w-100 d-flex border pl-3">
+        <div class="reply w-100 h-auto d-flex border pl-3">
             {% if not user.pfpic %}
             <img src="../../../rabbithole/static/images/default.png" alt="profile pic" id="pfpic" class="rounded-circle border mr-2 mb-1 align-self-center"/>
             {% else %}
             <img src="../../../rabbithole/static/images/{{ user.pfpic }}" alt="profile pic" id="pfpic" class="rounded-circle border mr-2 mb-1 align-self-center"/>
             {% endif %}
-            <p id="about" class="border-right pr-2 align-self-end">@{{ reply.owner }}<br>{{ reply.time_created }}</p>
+            <p id="about" class="border-right pr-2 align-self-center h-50 my-auto">@{{ reply.owner }}<br>{{ reply.time_created }}</p>
             <div class="d-flex align-self-center w-75 position-relative">
-                <p class="ml-2 mr-2 text-break"><span class="w-50">{{ reply.content }}</span></p>
+                <p class="mx-2 text-break"><span class="w-50">{{ reply.content }}</span></p>
                 {% if reply.owner == user.username %}
                 <form method="POST" action="/rh/{{ post.community }}/{{ post.id }}/{{ reply.id }}/delete">
                     <button type="submit" class="delete w-25 bg-transparent border-0 text-danger">Delete</button>

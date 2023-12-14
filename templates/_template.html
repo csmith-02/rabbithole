@@ -107,6 +107,7 @@
           </li>
           {% endif %}
         </ul>
+        {% if loggedIn %}
         <form
           class="form-inline my-2 my-lg-0"
           style="padding-right: 50px"
@@ -125,8 +126,9 @@
             Search
           </button>
         </form>
+        {% endif %}
         {% if not loggedIn %}
-        <a class="btn btn-outline-success my-2 my-sm-0" href="/login">Login</a>
+        <a class="btn btn-outline-success my-2 my-sm-0 mr-5" href="/login">Login</a>
         {% endif %}
       </div>
     </nav>

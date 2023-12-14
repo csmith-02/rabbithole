@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS post (
             REFERENCES user_community(uc_id) ON DELETE CASCADE,
     CONSTRAINT fk_owner
         FOREIGN KEY (owner)
-            REFERENCES users(username) ON DELETE CASCADE,
+            REFERENCES users(username) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT fk_community
         FOREIGN KEY (community)
             REFERENCES community(name),
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS reply (
     owner VARCHAR(255) NOT NULL,
     CONSTRAINT fk_owner
         FOREIGN KEY (owner)
-            REFERENCES users(username),
+            REFERENCES users(username) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT fk_post_id
         FOREIGN KEY (post_id)
             REFERENCES post(id) ON DELETE CASCADE,
