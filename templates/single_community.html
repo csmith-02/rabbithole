@@ -53,7 +53,7 @@
     </style>
     <div id="body" class="container">
         <div class="text-center mb-5 d-flex flex-column align-items-center">
-            <img class="big-profile border border-1 rounded-circle mb-2" src="../rabbithole/static/images/{{ community.pfpic }}" alt="community image"/>
+            <img class="big-profile border border-1 rounded-circle mb-2" src="../../../rabbithole/static/images/{{ community.pfpic }}" alt="community image"/>
             <div>
                 <h1>{{ community.name }}</h1>
             </div>
@@ -79,7 +79,7 @@
                         </div>
                     </div>
                     {% if post.image != '' %}
-                    <img class="post-image border border-1" src="../rabbithole/static/images/{{ post.image }}" alt="post image"/>
+                    <img class="post-image border border-1" src="../../../rabbithole/static/images/{{ post.image }}" alt="post image"/>
                     {% else %}
                     <hr class="w-100">
                     {% endif %}
