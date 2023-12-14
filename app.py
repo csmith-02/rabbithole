@@ -12,7 +12,7 @@ load_dotenv()
 
 app = Flask(__name__, static_url_path='/rabbithole/static')
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI')
 
 app.secret_key = os.getenv('APP_SECRET_KEY', 'strawberry')
 db.init_app(app)
