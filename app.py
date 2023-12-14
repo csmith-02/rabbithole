@@ -18,7 +18,7 @@ app.secret_key = os.getenv('APP_SECRET_KEY', 'strawberry')
 db.init_app(app)
 bcrypt = Bcrypt(app)
 
-app.config['UPLOAD_FOLDER'] = '../../../rabbithole/static/images/'
+app.config['UPLOAD_FOLDER'] = 'rabbithole/static/images/'
 
 
 @app.route('/rabbithole/static/<path:path>')
