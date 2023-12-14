@@ -456,9 +456,10 @@ def view_post_comments(community, id):
     if currentCommunity not in currentUser.communities:
         return redirect('/home', 302)
     replies = Reply.query.filter_by(post_id=id).all()
-    
+    users = User.query.all()
+
     replies.sort(key=lambda post: post.id, reverse=True)
-    return render_template('single_post.html', loggedIn=True, community=currentCommunity, post=post, user=currentUser, replies=replies)
+    return render_template('single_post.html', loggedIn=True, community=currentCommunity, post=post, user=currentUser, replies=replies, users=users)
 
 @app.post('/rh/<community>/<id>/comments')
 def post_comment(community, id):
